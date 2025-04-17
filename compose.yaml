@@ -1,0 +1,23 @@
+﻿services:
+  identityprovider:
+    image: nono/idp:latest
+    build:
+      context: .
+      dockerfile: Idp.Api/Dockerfile
+    ports:
+      - "7254:8080"
+      - "5082:8081"
+      
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver-db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Guilherme123@
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+        
+volumes:
+  sqlserver-data:

@@ -25,7 +25,7 @@ Follow these steps to get the application running locally:
 ### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/GuilhermeNono/Sphinx.git
-cd Nemeia
+cd Sphinx
 ```
 
 ### 2️⃣ Build and Run with Docker

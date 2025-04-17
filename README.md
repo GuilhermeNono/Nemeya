@@ -1,52 +1,52 @@
-# Identity Provider (Idp)
 
-## Overview
-Identity Provider (Idp) is a .NET 8-based ASP.NET Core application that manages identity, authentication, and access control using JWT. It is designed with Domain-Driven Design (DDD) principles and supports containerized deployment with Docker.
+# 🌐 Project Nemeia: Identity Provider
 
----
+Project Nemeia is an ASP.NET Core application designed to serve as an identity provider. Built with **.NET 8**, **Docker**, and **SQL Server**, it provides a robust and scalable solution for managing authentication and identity in modern applications. 🚀
 
-## Features
-- JWT-based authentication and authorization
-- Modular structure using Domain-Driven Design
-- SQL Server integration for data persistence
-- Dockerized setup for easy deployment
+## ✨ Features
 
----
+- 🔒 **Identity Management**: User authentication, authorization, and identity management.
+- 🛠️ **.NET 8**: Leverages the latest features and performance improvements of .NET 8.
+- 🐳 **Docker Support**: Containerized application for easy deployment and scalability.
+- 🗄️ **SQL Server Integration**: Secure and reliable data storage.
 
-## Getting Started
+## 🖥️ Requirements
 
-### Prerequisites
-- [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Docker](https://www.docker.com/)
-- [SQL Server](https://www.microsoft.com/sql-server)
+To run the project, ensure you have the following installed:
 
-### Run with Docker
-1. Build and run the application:
-```shell script
+- 📦 [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- 🐳 [Docker](https://www.docker.com/)
+- 🗄️ [SQL Server](https://www.microsoft.com/en-us/sql-server)
+
+## 🚀 Getting Started
+
+Follow these steps to get the application running locally:
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/GuilhermeNono/Nemeia.git
+cd Nemeia
+```
+
+### 2️⃣ Build and Run with Docker
+Ensure Docker is installed and running on your machine. Use the provided Docker configuration to build and run the project:
+```bash
 docker-compose up --build
 ```
 
-2. Access the application on:
-   - Port `7254` for API
-   - Port `1433` for SQL Server
+### 3️⃣ Configure SQL Server
+Set up the SQL Server database using the provided scripts in the project. Make sure the connection string in the `appsettings.json` file is correctly configured.
 
----
+## 📂 Project Structure
 
-## Technologies
-- **Framework**: ASP.NET Core 8.0
-- **Database**: SQL Server
-- **Containerization**: Docker
-- **Authentication**: JWT
+- **📁 /src**: Contains the main application source code.
+- **📁 /docker**: Docker-related configurations and files.
+- **📁 /scripts**: SQL scripts for database setup.
 
----
+## 🤝 Contributing
 
-## Project Structure
-- **Idp.Api**: API layer to expose endpoints.
-- **Idp.Application**: Business logic and commands/queries.
-- **Idp.Domain**: Core domain logic and entities.
-- **Idp.Infrastructure**: Persistence and database scripts.
+Contributions are welcome! If you'd like to contribute to the project, please fork the repository and submit a pull request. 🛠️
 
----
+## 📜 License
 
-## License
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE). 📝

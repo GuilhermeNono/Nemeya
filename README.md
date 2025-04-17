@@ -1,7 +1,7 @@
 
 # 🌐 Sphinx: Identity Provider
 
-Project Nemeia is an ASP.NET Core application designed to serve as an identity provider. Built with **.NET 8**, **Docker**, and **SQL Server**, it provides a robust and scalable solution for managing authentication and identity in modern applications. 🚀
+Project Sphinx is an ASP.NET Core application designed to serve as an identity provider. Built with **.NET 8**, **Docker**, and **SQL Server**, it provides a robust and scalable solution for managing authentication and identity in modern applications. 🚀
 
 ## ✨ Features
 
@@ -24,7 +24,7 @@ Follow these steps to get the application running locally:
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/GuilhermeNono/Nemeia.git
+git clone https://github.com/GuilhermeNono/Sphinx.git
 cd Nemeia
 ```
 

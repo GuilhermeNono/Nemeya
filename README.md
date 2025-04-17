@@ -1,5 +1,5 @@
 
-# 🌐 Nemeia: Identity Provider
+# 🌐 Sphinx: Identity Provider
 
 Project Nemeia is an ASP.NET Core application designed to serve as an identity provider. Built with **.NET 8**, **Docker**, and **SQL Server**, it provides a robust and scalable solution for managing authentication and identity in modern applications. 🚀
 

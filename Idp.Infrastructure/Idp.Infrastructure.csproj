@@ -10,7 +10,14 @@
       <PackageReference Include="dbup" Version="5.0.41" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.15">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.15" />
+      <PackageReference Include="OpenIddict" Version="6.2.0" />
+      <PackageReference Include="OpenIddict.AspNetCore" Version="6.2.0" />
+      <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.2.0" />
     </ItemGroup>
 
     <ItemGroup>

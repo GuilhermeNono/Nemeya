@@ -8,6 +8,7 @@ using Idp.Domain.Enums;
 using Idp.Domain.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using OpenIddict.EntityFrameworkCore.Models;
 
 namespace Idp.Infrastructure.EFCore.Database.Context;
 

@@ -2,12 +2,15 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hangfire;
+using Idp.Api.Extensions;
 using Idp.Api.Middlewares;
 using Idp.Application;
 using Idp.Application.Members.Behaviours;
+using Idp.Infrastructure;
 using Idp.Infrastructure.DbUp;
 using Idp.Presentation.Controllers.Abstractions;
 using MediatR;
+using OpenIddict.Abstractions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +25,32 @@ builder.Services.AddControllers(opt =>
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.RegisterConfiguration(builder.Configuration);
+
+#region | OpenIddict |
+
+builder.Services.ConfigureOpenId();
+
+#endregion
+
+#region | Authentication |
+
+builder.Services.ConfigureAuthentication()
+    .ConfigureAuthorization();
+
+#endregion
+
+#region | Database |
+
+builder.Services.ConfigureDatabase(builder.Configuration)
+    .AddMainRepositories()
+    .AddAuditRepositories();
+
+#endregion
 
 #region | MediatR | 
 
@@ -65,9 +92,7 @@ if (app.Environment.IsDevelopment())
 
 #region | DbUp |
 
-app.RunFunctionsDbUp(builder.Configuration)
-    .RunMainDbUp(builder.Configuration)
-    .RunAuditDbUp(builder.Configuration);
+app.AddDbUp(app.Configuration);
 
 #endregion
 
@@ -81,3 +106,26 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+using (var scope = app.Services.CreateScope())
+    await SeedClientAsync(scope.ServiceProvider);
+return;
+
+async Task SeedClientAsync(IServiceProvider services)
+{
+    var manager = services.GetRequiredService<IOpenIddictApplicationManager>();
+
+    if (await manager.FindByClientIdAsync("myclient") is null)
+    {
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = "myclient",
+            ClientSecret = "mysecret",
+            Permissions =
+            {
+                OpenIddictConstants.Permissions.Endpoints.Token,
+                OpenIddictConstants.Permissions.GrantTypes.ClientCredentials
+            }
+        });
+    }
+}

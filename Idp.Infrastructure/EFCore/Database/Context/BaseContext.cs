@@ -6,16 +6,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using OpenIddict.EntityFrameworkCore.Models;
 
 namespace Idp.Infrastructure.EFCore.Database.Context;
 
 public abstract class BaseContext<TContext>(DbContextOptions<TContext> options, ILogger<BaseContext<TContext>> logger)
     : DbContext(options), IDatabaseContext where TContext : DbContext
 {
-
     public ILogger<BaseContext<TContext>> Logger { get; set; } = logger;
     public IDbContextTransaction? CurrentTransaction { get; private set; }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!EnvironmentHelper.IsDevelopmentEnvironment)

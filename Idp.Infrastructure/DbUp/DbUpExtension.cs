@@ -14,9 +14,26 @@ public static class DbUpExtension
 {
     private const string ServerConnectionName = "MainDatabase";
     private const string AuditServerConnectionName = "AuditDatabase";
-    private static readonly IReadOnlyList<string> ServerConnections = [ServerConnectionName, AuditServerConnectionName];
+    private const string JobServerConnectionName = "HangFire";
+    
+    private static readonly IReadOnlyList<string> ServerConnections = [ServerConnectionName, AuditServerConnectionName, JobServerConnectionName];
 
-    public static IApplicationBuilder RunFunctionsDbUp(this IApplicationBuilder application,
+    public static void AddDbUp(this IApplicationBuilder application,
+        IConfiguration configuration)
+    {
+        foreach (var serverConnection in ServerConnections)
+        {
+            var connectionString = configuration.GetConnectionString(serverConnection);
+
+            EnsureDatabase.For.SqlDatabase(connectionString);
+        }
+        
+        RunFunctionsDbUp(application, configuration);
+        RunMainDbUp(application, configuration);
+        RunAuditDbUp(application, configuration);
+    }
+    
+    private static IApplicationBuilder RunFunctionsDbUp( IApplicationBuilder application,
         IConfiguration configuration)
     {
         Console.WriteLine("| Checando funções customizadas dos Bancos |");
@@ -24,8 +41,6 @@ public static class DbUpExtension
         foreach (var connectionName in ServerConnections)
         {
             var connectionString = configuration.GetConnectionString(connectionName);
-
-            EnsureDatabase.For.SqlDatabase(connectionString);
 
             var upgrader = ConfigureEngine(connectionString!, "Functions");
 
@@ -40,13 +55,11 @@ public static class DbUpExtension
     }
 
 
-    public static IApplicationBuilder RunMainDbUp(this IApplicationBuilder application, IConfiguration configuration)
+    private static IApplicationBuilder RunMainDbUp( IApplicationBuilder application, IConfiguration configuration)
     {
         Console.WriteLine("| Checando arquivos de migração do Banco |");
         var connectionString = configuration.GetConnectionString(ServerConnectionName);
-
-        EnsureDatabase.For.SqlDatabase(connectionString);
-
+        
         var upgrader = ConfigureEngine(connectionString!, "Versions");
 
         var result = upgrader.PerformUpgrade();
@@ -57,12 +70,10 @@ public static class DbUpExtension
         return application;
     }
 
-    public static IApplicationBuilder RunAuditDbUp(this IApplicationBuilder application, IConfiguration configuration)
+    private static IApplicationBuilder RunAuditDbUp( IApplicationBuilder application, IConfiguration configuration)
     {
         Console.WriteLine("| Checando arquivos de migração do Banco de Auditoria |");
         var connectionString = configuration.GetConnectionString(AuditServerConnectionName);
-
-        EnsureDatabase.For.SqlDatabase(connectionString);
 
         var upgrader = ConfigureEngine(connectionString!, "Audit", "Versions");
 

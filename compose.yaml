@@ -4,10 +4,19 @@
     build:
       context: .
       dockerfile: Idp.Api/Dockerfile
-    ports:
-      - "7254:8080"
-      - "5082:8081"
-      
+    ports:    
+      - "5082:80"
+      - "7254:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123456
+    volumes:
+      - ./aspnetapp.pfx:/https/aspnetapp.pfx:ro
+    depends_on:
+      - database
+  
   database:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver-db
@@ -18,6 +27,6 @@
       - "1433:1433"
     volumes:
       - sqlserver-data:/var/opt/mssql
-        
+
 volumes:
   sqlserver-data:

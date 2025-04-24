@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
+using System.Text;
 using Idp.CrossCutting.Configurations;
 using Idp.Domain.Database.Context;
 using Idp.Domain.Database.Transaction;
@@ -23,8 +24,10 @@ public static class ServiceExtension
     public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<IMainContext, MainContext>(opt =>
-            opt.UseSqlServer(configuration.GetConnectionString(MainConnectionName))
-                .UseOpenIddict());
+        {
+            opt.UseSqlServer(configuration.GetConnectionString(MainConnectionName));
+            opt.UseOpenIddict();
+        });
 
         services.AddDbContext<IAuditContext, AuditContext>(opt =>
             {
@@ -110,10 +113,11 @@ public static class ServiceExtension
                 opt.SetTokenEndpointUris("auth/connect/token");
 
                 opt.AddDevelopmentEncryptionCertificate()
-                    .AddDevelopmentSigningCertificate();
+                    .AddSigningKey(new ECDsaSecurityKey(ECDsa.Create(ECCurve.NamedCurves.nistP256)));
 
                 opt.UseAspNetCore()
                     .EnableTokenEndpointPassthrough();
+                
             });
         
         return services;

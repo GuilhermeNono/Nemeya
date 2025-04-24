@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using OpenIddict.Abstractions;
 
 namespace Idp.Presentation.Controllers;
 
@@ -17,14 +18,14 @@ public class AuthenticationController : ApiController
 
     [AllowAnonymous]
     [HttpPost("connect/token")]
-    public IActionResult TestAuthentication()
+    public async Task<IActionResult> TestAuthentication()
     {
         return Ok();
     }
 
     [Authorize]
     [HttpPost("secure")]
-    public IActionResult Secure()
+    public async Task<IActionResult> Secure()
     {
         return Ok();
     }

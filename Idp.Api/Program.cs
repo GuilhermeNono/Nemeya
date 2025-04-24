@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hangfire;
 using Idp.Api.Extensions;
+using Idp.Api.HostedService;
 using Idp.Api.Middlewares;
 using Idp.Application;
 using Idp.Application.Members.Behaviours;
@@ -80,7 +81,9 @@ builder.Services.AddHangfire(config => config
 if(builder.Environment.IsDevelopment())
     builder.Services.AddHangfireServer();
 
-#endregion 
+#endregion
+
+builder.Services.AddHostedService<SeederHostedService>();
 
 var app = builder.Build();
 
@@ -106,26 +109,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-using (var scope = app.Services.CreateScope())
-    await SeedClientAsync(scope.ServiceProvider);
-return;
-
-async Task SeedClientAsync(IServiceProvider services)
-{
-    var manager = services.GetRequiredService<IOpenIddictApplicationManager>();
-
-    if (await manager.FindByClientIdAsync("myclient") is null)
-    {
-        await manager.CreateAsync(new OpenIddictApplicationDescriptor
-        {
-            ClientId = "myclient",
-            ClientSecret = "mysecret",
-            Permissions =
-            {
-                OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.GrantTypes.ClientCredentials
-            }
-        });
-    }
-}

@@ -4,7 +4,10 @@
         constraint PK_Client primary key not null
         constraint DF_Client default NEWID(),
     ClientId varchar(254)                not null,
-    Secret   varchar(254)                not null
+    Secret   varchar(254)                not null,
+    Operation char(7) not null,
+    ChangedBy varchar(254) not null,
+    ChangedAt DATETIMEOFFSET not null,
 )
 
 go
@@ -17,7 +20,10 @@ CREATE TABLE Ath_Users
     Username     varchar(254)          not null,
     Email        varchar(254)          not null,
     PasswordHash varchar(254)          not null,
-    HasMfa       BIT                   not null
+    HasMfa       BIT                   not null,
+    Operation char(7) not null,
+    ChangedBy varchar(254) not null,
+    ChangedAt DATETIMEOFFSET not null,
 )
 
 go
@@ -44,7 +50,10 @@ CREATE TABLE Ath_ClientScopes
     ScopeId  int              not null
         constraint FK_ClientScope_Scopes references Ath_Scopes (Id),
     ClientId uniqueidentifier not null
-        constraint FK_ClientScope_Clients references Ath_Clients (Id)
+        constraint FK_ClientScope_Clients references Ath_Clients (Id),
+    Operation char(7) not null,
+    ChangedBy varchar(254) not null,
+    ChangedAt DATETIMEOFFSET not null,
 )
 
 GO
@@ -61,6 +70,9 @@ CREATE TABLE Ath_ClientRedirects
     Uri      varchar(600)     not null,
     ClientId uniqueidentifier not null
         constraint FK_ClientRedirect_Clients references Ath_Clients (Id),
+    Operation char(7) not null,
+    ChangedBy varchar(254) not null,
+    ChangedAt DATETIMEOFFSET not null,
 )
 
 GO
@@ -79,7 +91,10 @@ CREATE TABLE Ath_Tokens
     ClientId     uniqueidentifier not null
         constraint FK_Token_Clients references Ath_Clients (Id),
     ExpiresAt    DATETIMEOFFSET   NOT NULL,
-    RefreshToken varchar(160)     NOT NULL
+    RefreshToken varchar(160)     NOT NULL,
+    Operation char(7) not null,
+    ChangedBy varchar(254) not null,
+    ChangedAt DATETIMEOFFSET not null,
 )
 
 GO
@@ -96,5 +111,8 @@ CREATE TABLE Ath_AuthorizationCodes
     Code          varchar(256)     not null,
     CodeChallenge varchar(128)     NOT NULL,
     State         varchar(180)     null,
-    ExpiresAt     DATETIMEOFFSET   NOT NULL
+    ExpiresAt     DATETIMEOFFSET   NOT NULL,
+    Operation char(7) not null,
+    ChangedBy varchar(254) not null,
+    ChangedAt DATETIMEOFFSET not null,
 )

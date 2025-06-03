@@ -1,0 +1,22 @@
+﻿using Idp.Application.Members.Abstractions.Commands;
+using Idp.Contract.Authentication.Request;
+using Idp.Contract.Authentication.Response;
+using Idp.Domain.Objects;
+
+namespace Idp.Application.Members.Commands.Authentication.Authorize.Code;
+
+public record CodeAuthorizeCommand(
+    string ClientId,
+    string RedirectUri,
+    string[] Scopes,
+    string State,
+    string CodeChallenge,
+    string CodeChallengeMethod,
+    LoggedPerson LoggedPerson) : ICommand<CodeAuthorizeResponse>
+{
+    public static CodeAuthorizeCommand ToCommand(CodeAuthorizeRequest request, LoggedPerson loggedPerson)
+    {
+        return new CodeAuthorizeCommand(request.ClientId, request.RedirectUri, request.Scopes, request.State,
+            request.CodeChallenge, request.CodeChallengeMethod, loggedPerson);
+    }
+}

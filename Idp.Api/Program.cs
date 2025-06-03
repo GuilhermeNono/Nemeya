@@ -1,9 +1,7 @@
-
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hangfire;
 using Idp.Api.Extensions;
-using Idp.Api.HostedService;
 using Idp.Api.Middlewares;
 using Idp.Application;
 using Idp.Application.Members.Behaviours;
@@ -11,7 +9,6 @@ using Idp.Infrastructure;
 using Idp.Infrastructure.DbUp;
 using Idp.Presentation.Controllers.Abstractions;
 using MediatR;
-using OpenIddict.Abstractions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,12 +28,6 @@ builder.Services.AddControllers(opt =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.RegisterConfiguration(builder.Configuration);
-
-#region | OpenIddict |
-
-builder.Services.ConfigureOpenId();
-
-#endregion
 
 #region | Authentication |
 
@@ -82,8 +73,6 @@ if(builder.Environment.IsDevelopment())
     builder.Services.AddHangfireServer();
 
 #endregion
-
-builder.Services.AddHostedService<SeederHostedService>();
 
 var app = builder.Build();
 

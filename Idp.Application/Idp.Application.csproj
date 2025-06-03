@@ -19,7 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Members\Commands\" />
       <Folder Include="Members\Queries\" />
     </ItemGroup>
 

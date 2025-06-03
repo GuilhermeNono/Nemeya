@@ -94,33 +94,4 @@ public static class ServiceExtension
     }
 
     #endregion
-    
-    #region | OpenIddict |
-
-    public static IServiceCollection ConfigureOpenId(this IServiceCollection services)
-    {
-
-        services.AddOpenIddict()
-            .AddCore(opt =>
-            {
-                opt.UseEntityFrameworkCore()
-                    .UseDbContext<MainContext>();
-            })
-            .AddServer(opt =>
-            {
-                opt.AllowClientCredentialsFlow();
-                opt.SetTokenEndpointUris("auth/connect/token");
-
-                opt.AddDevelopmentEncryptionCertificate()
-                    .AddSigningKey(new ECDsaSecurityKey(ECDsa.Create(ECCurve.NamedCurves.nistP256)));
-
-                opt.UseAspNetCore()
-                    .EnableTokenEndpointPassthrough();
-                
-            });
-        
-        return services;
-    }
-    
-    #endregion
 }

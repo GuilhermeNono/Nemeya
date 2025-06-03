@@ -16,7 +16,7 @@ public sealed class ValidationPipelineBehaviour<TRequest, TResponse> :
         CancellationToken cancellationToken)
     {
         if (!_validators.Any())
-            return await next();
+            return await next(cancellationToken);
 
         ValidationFailure[] errors = _validators
             .Select(validator => validator.Validate(request))
@@ -29,6 +29,6 @@ public sealed class ValidationPipelineBehaviour<TRequest, TResponse> :
         if (errors.Length != 0)
             throw new ValidationException(errors);
 
-        return await next();
+        return await next(cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Idp.Contract.Enum;
 
 namespace Idp.Contract.Authentication.Request;
 
@@ -14,4 +15,4 @@ public record CodeAuthorizeRequest(
     [property:JsonPropertyName("code_challenge")]
     string CodeChallenge,
     [property:JsonPropertyName("code_challenge_method")]
-    string CodeChallengeMethod);
+    CodeChallengeMethod CodeChallengeMethod);

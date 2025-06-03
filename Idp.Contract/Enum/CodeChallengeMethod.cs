@@ -1,4 +1,4 @@
-﻿namespace Idp.Domain.Enums;
+﻿namespace Idp.Contract.Enum;
 
 public enum CodeChallengeMethod
 {

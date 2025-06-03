@@ -86,14 +86,15 @@ GO
 
 CREATE TABLE Ath_AuthorizationCodes
 (
-    Id uniqueidentifier not null
+    Id            uniqueidentifier not null
         constraint PK_AuthorizationCode primary key
         constraint DF_AuthorizationCode default NEWID(),
-    UserId uniqueidentifier not null
-        constraint FK_AuthorizationCode_Users REFERENCES Ath_Users(Id),
-    ClientId     uniqueidentifier not null
+    UserId        uniqueidentifier not null
+        constraint FK_AuthorizationCode_Users REFERENCES Ath_Users (Id),
+    ClientId      uniqueidentifier not null
         constraint FK_AuthorizationCode_Clients references Ath_Clients (Id),
-    Code varchar(256) not null,
-    CodeChallenge varchar(128) NOT NULL, 
-    ExpiresAt    DATETIMEOFFSET   NOT NULL
+    Code          varchar(256)     not null,
+    CodeChallenge varchar(128)     NOT NULL,
+    State         varchar(180)     null,
+    ExpiresAt     DATETIMEOFFSET   NOT NULL
 )

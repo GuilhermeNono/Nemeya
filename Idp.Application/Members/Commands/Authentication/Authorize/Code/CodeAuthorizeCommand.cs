@@ -1,6 +1,7 @@
 ﻿using Idp.Application.Members.Abstractions.Commands;
 using Idp.Contract.Authentication.Request;
 using Idp.Contract.Authentication.Response;
+using Idp.Contract.Enum;
 using Idp.Domain.Objects;
 
 namespace Idp.Application.Members.Commands.Authentication.Authorize.Code;
@@ -11,7 +12,7 @@ public record CodeAuthorizeCommand(
     string[] Scopes,
     string State,
     string CodeChallenge,
-    string CodeChallengeMethod,
+    CodeChallengeMethod CodeChallengeMethod,
     LoggedPerson LoggedPerson) : ICommand<CodeAuthorizeResponse>
 {
     public static CodeAuthorizeCommand ToCommand(CodeAuthorizeRequest request, LoggedPerson loggedPerson)

@@ -3,7 +3,7 @@ using Idp.Domain.Enums;
 
 namespace Idp.Infrastructure.EFCore.Query.CustomQuery.Interfaces;
 
-public interface IQuery<TResult> : IBaseQuery<TResult>, IQuerySqlConfigurer<TResult> 
+public interface IQuery<TResult> : IBaseQuery<TResult>, IQueryConfigurer<TResult> 
 {
     public IQuery<TResult> OrderBy<TProperty>(Expression<Func<TResult, TProperty>> expression,
         Sort sort = Sort.Asc);
@@ -12,7 +12,7 @@ public interface IQuery<TResult> : IBaseQuery<TResult>, IQuerySqlConfigurer<TRes
     public IQuery<TResult> PageConfig(int? pageSize, int? pageNumber);
 }
 
-public interface IQuery<TResult, TFilter> : IBaseQuery<TResult>, IQuerySqlConfigurer<TResult>
+public interface IQuery<TResult, TFilter> : IBaseQuery<TResult>, IQueryConfigurer<TResult>
 {
     public IQuery<TResult, TFilter> OrderBy<TProperty>(Expression<Func<TResult, TProperty>> expression,
         Sort sort = Sort.Asc);

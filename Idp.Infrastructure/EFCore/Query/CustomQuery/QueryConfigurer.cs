@@ -1,21 +1,12 @@
-﻿using Idp.CrossCutting.Exceptions.Http.Internal;
-using Idp.Domain.Database.Queries.Base;
+﻿using Idp.Domain.Database.Queries.Base;
 using Idp.Infrastructure.EFCore.Query.CustomQuery.Interfaces;
+using Idp.Infrastructure.EFCore.Query.CustomQuery.Structs;
 
 namespace Idp.Infrastructure.EFCore.Query.CustomQuery;
 
-public abstract class QuerySqlConfigurer<TResult> : QuerySqlPropertyConfigurer<TResult>, IQuerySqlConfigurer<TResult>
+public abstract class QueryConfigurer<TResult> : QueryPropertyConfigurer<TResult>, IQueryConfigurer<TResult>
 {
-    protected QuerySqlConfigurer()
-    {
-        Pagination = new Pagination<TResult>(null, null);
-        Limiter = new QuerySqlLimiter<TResult>();
-    }
-
-    public QuerySqlLimiter<TResult> Limiter { get; }
-
-    protected IPagination<TResult> Pagination { get; }
-    private bool _disregardExternalOrder = false;
+    protected IPagination<TResult> Pagination { get; } = new Pagination<TResult>(null, null);
 
     /// <summary>
     /// Este método deve ser utilizado para construir a consulta SQL.
@@ -28,6 +19,14 @@ public abstract class QuerySqlConfigurer<TResult> : QuerySqlPropertyConfigurer<T
     /// </example>
     /// </summary>
     protected abstract void Prepare();
+
+    private void GetPreparedQuery()
+    {
+        Prepare();
+        SqlQueryValidator
+            .WithQuery(QueryBuilder)
+            .Validate();
+    }
 
     /// <summary>
     /// Essa propriedade deve ser utilizada para contagem dos registros de uma consulta.
@@ -57,10 +56,6 @@ public abstract class QuerySqlConfigurer<TResult> : QuerySqlPropertyConfigurer<T
 
             SqlSelectWithPrepareQuery();
 
-            if (!_disregardExternalOrder)
-            {
-            }
-
             SqlOrderingQuery();
 
             SqlPaginationQuery();
@@ -75,17 +70,14 @@ public abstract class QuerySqlConfigurer<TResult> : QuerySqlPropertyConfigurer<T
         Add(" Select Count(1) as Value");
         Add("   From ( ");
         Prepare();
-        if (QueryBuilder.ToString().Contains("order by", StringComparison.InvariantCultureIgnoreCase))
-            _disregardExternalOrder = true;
         Add("        ) t ");
     }
 
     private void SqlSelectWithPrepareQuery()
     {
-        QueryBuilder.Clear();
-        Add($"   Select {SqlDataLimiter()} * ");
+        Add($"   Select * ");
         Add("   From ( ");
-        Prepare();
+        GetPreparedQuery();
         Add("        ) t ");
     }
 
@@ -96,16 +88,13 @@ public abstract class QuerySqlConfigurer<TResult> : QuerySqlPropertyConfigurer<T
         if (!(Pagination?.IsPageable ?? false))
             return;
 
-        if (_disregardExternalOrder)
-            throw new ExternalOrderWithTreatablePagination();
-
         Add($"  Offset {Pagination?.Size ?? 10} * ({Pagination?.Page} - 1) ");
         Add($"  Rows Fetch Next {Pagination?.Size} Rows Only");
     }
 
     private void SqlOrderingQuery()
     {
-        Add($"  Order By ", Pagination.IsSortable);
+        Add("  Order By ", Pagination.IsSortable);
         foreach (var order in Pagination.Ordering)
         {
             Add($" {order?.Column} {order?.Sort} ", Pagination.IsSortable);
@@ -113,11 +102,6 @@ public abstract class QuerySqlConfigurer<TResult> : QuerySqlPropertyConfigurer<T
             if (!Pagination.IsLastInOrder(order!))
                 Add(", ", Pagination.IsSortable);
         }
-    }
-
-    private string SqlDataLimiter()
-    {
-        return Pagination.Size == 0 ? $"TOP({Limiter.LimitData})" : string.Empty;
     }
 
     private void CheckIfThePaginationContainsOrdering()

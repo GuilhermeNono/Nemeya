@@ -1,11 +1,12 @@
 ﻿using System.Linq.Expressions;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace Idp.Infrastructure.EFCore.Query.CustomQuery;
 
-public class QuerySqlPropertyConfigurer<TResult>
+public class QueryPropertyConfigurer<TResult>
 {
-    protected StringBuilder QueryBuilder = new ();
+    protected readonly StringBuilder QueryBuilder = new ();
 
     /// <summary>
     /// Este método deve ser utilizado quando for necessário incluir um alias na consulta SQL para mapear um objeto.
@@ -41,7 +42,7 @@ public class QuerySqlPropertyConfigurer<TResult>
     /// </example>
     /// <returns>Será retornado o nome da propriedade já mapeada com o alias <c>"as foo"</c>.</returns>
     /// </summary>
-    protected string Alias(string alias)
+    protected string Alias([LanguageInjection("SQL")]string alias)
     {
         return $"As {alias}";
     }
@@ -56,7 +57,7 @@ public class QuerySqlPropertyConfigurer<TResult>
     /// </code>
     /// </example>
     /// </summary>
-    protected void Add(string value)
+    protected void Add([LanguageInjection("SQL")]string value)
     {
         Add(value, true);
     }
@@ -72,16 +73,11 @@ public class QuerySqlPropertyConfigurer<TResult>
     /// </code>
     /// </example>
     /// </summary>
-    protected void Add(string value, bool condition)
+    protected void Add([LanguageInjection("SQL")]string value, bool condition)
     {
         if (!condition)
             return;
-
-        var containsTwoOrMoreWhereCondition = QueryBuilder.ToString().Contains("WHERE") && value.Contains("WHERE");
-
-        if (containsTwoOrMoreWhereCondition)
-            value = value.Replace("WHERE", "AND", StringComparison.InvariantCultureIgnoreCase);
-
+        
         QueryBuilder.AppendLine(value);
     }
 }

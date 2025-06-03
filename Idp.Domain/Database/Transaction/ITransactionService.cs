@@ -1,11 +1,12 @@
-﻿using Idp.Domain.Enums;
+﻿using Idp.Domain.Database.Transaction.Metadata;
+using Idp.Domain.Enums;
 
 namespace Idp.Domain.Database.Transaction;
 
 public interface ITransactionService
 {
-    Task ExecuteInTransactionContextAsync(Func<Task> action,
-        DbTransactionType dbTransactionType = DbTransactionType.ReadUncommitted,
-        TransactionLogLevel logLevel = TransactionLogLevel.Explicit,
-        CancellationToken cancellationToken = default);
+    bool IsTransactionActive { get; }
+    IReadOnlyCollection<TransactionMetadata>? TransactionMetadata { get; }
+    Task ExecuteInTransactionContextAsync(Func<Task> action, DbTransactionType transactionType,
+        TransactionLogLevel logLevel, CancellationToken cancellationToken, bool forceNewTransaction);
 }

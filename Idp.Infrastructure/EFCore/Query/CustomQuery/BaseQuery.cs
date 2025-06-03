@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Idp.Infrastructure.EFCore.Query.CustomQuery;
 
-public abstract class BaseQuery<TResult> : QuerySqlConfigurer<TResult>, IQuery<TResult>
+public abstract class BaseQuery<TResult> : QueryConfigurer<TResult>, IQuery<TResult>
 
 {
     public bool IsCountable => Pagination.IsPageable;
@@ -66,7 +66,7 @@ public abstract class BaseQuery<TResult> : QuerySqlConfigurer<TResult>, IQuery<T
 }
 
 public abstract class BaseQuery<TResult, TFilter>(TFilter filter)
-    : QuerySqlConfigurer<TResult>, IQuery<TResult, TFilter>
+    : QueryConfigurer<TResult>, IQuery<TResult, TFilter>
 {
     protected TFilter Filter { get; } = filter;
     public bool IsCountable => Pagination.IsPageable;

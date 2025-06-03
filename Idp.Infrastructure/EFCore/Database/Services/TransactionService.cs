@@ -1,5 +1,7 @@
 ﻿using Idp.Domain.Database.Context;
 using Idp.Domain.Database.Transaction;
+using Idp.Domain.Database.Transaction.Context;
+using Idp.Domain.Database.Transaction.Metadata;
 using Idp.Domain.Enums;
 using Microsoft.Extensions.Logging;
 
@@ -11,51 +13,57 @@ public class TransactionService(
     ILogger<TransactionService> logger)
     : ITransactionService
 {
-    private readonly Dictionary<int, IDatabaseTransaction?> _transactions = [];
-    private readonly Stack<int> _actionHashLayers = [];
-    private int? _hashCodeToFinishTransaction;
+    private readonly Dictionary<int, IDatabaseTransaction?> _transactionContext = [];
+
+    public bool IsTransactionActive => TransactionContext.IsTransactionActive;
+    public IReadOnlyCollection<TransactionMetadata>? TransactionMetadata => TransactionContext.Transactions;
 
     public async Task ExecuteInTransactionContextAsync(Func<Task> action, DbTransactionType transactionType,
-        TransactionLogLevel logLevel, CancellationToken cancellationToken)
+        TransactionLogLevel logLevel, CancellationToken cancellationToken, bool forceNewTransaction)
     {
+        var nested = TransactionContext.IsTransactionActive && !forceNewTransaction;
+
+        if (nested)
+        {
+            await action();
+            return;
+        }
+
         cancellationToken.ThrowIfCancellationRequested();
 
-        await BeginTransaction(transactionType, cancellationToken);
-
-        SendMessageOfTransactionStatus("|> Beginning transactions\n", logLevel);
+        TransactionContext.Push(new TransactionMetadata(transactionType));
 
         try
         {
-            int hashCode = action.GetHashCode();
+            await BeginTransaction(transactionType, cancellationToken);
 
-            _hashCodeToFinishTransaction ??= hashCode;
-            _actionHashLayers.Push(hashCode);
+            SendMessageOfTransactionStatus("|> Beginning transactions\n", logLevel);
 
             await action();
 
-
-            if (_actionHashLayers.Pop() == _hashCodeToFinishTransaction)
-            {
-                await CommitAllDbTransactions(cancellationToken);
-                SendMessageOfTransactionStatus("|> Transaction Commited\n", logLevel, false);
-            }
+            await CommitAllDbTransactions(cancellationToken);
+            SendMessageOfTransactionStatus("|> Transaction Commited\n", logLevel);
         }
         catch (Exception)
         {
-            SendMessageOfTransactionStatus("|> Rollback transaction executed\n", logLevel, false);
+            SendMessageOfTransactionStatus("|> Rollback transaction executed\n", logLevel);
 
             await RollbackAllDbTransactions(cancellationToken);
             throw;
         }
+        finally
+        {
+            TransactionContext.Pop();
+        }
     }
 
     private void SendMessageOfTransactionStatus(string message,
-        TransactionLogLevel logLevel = TransactionLogLevel.Explicit, bool whenTransactionsNotExist = true)
+        TransactionLogLevel logLevel = TransactionLogLevel.None)
     {
-        if (logLevel is TransactionLogLevel.Implicit)
+        if (logLevel is TransactionLogLevel.None)
             return;
 
-        if (whenTransactionsNotExist ? _transactions.Count == 0: _transactions.Count != 0)
+        if (_transactionContext.Count is not 0)
             logger.LogInformation("{Message}", message);
     }
 
@@ -65,30 +73,34 @@ public class TransactionService(
         await ComputeDbTransaction(auditContext, transactionType, cancellationToken);
     }
 
-    private async Task ComputeDbTransaction(IDatabaseContext context, DbTransactionType transactionType, CancellationToken cancellationToken)
+    private async Task ComputeDbTransaction(IDatabaseContext context, DbTransactionType transactionType,
+        CancellationToken cancellationToken)
     {
         if (!HashKeyExistInTransactionList(context.GetHashCode()))
         {
             await mainContext.BeginTransactionAsync(transactionType, cancellationToken);
-            _transactions.Add(context.GetHashCode(), context);
+            AddDbContext(context);
         }
     }
 
     private async Task CommitAllDbTransactions(CancellationToken cancellationToken)
     {
-        await Task.WhenAll(_transactions.Select(x => x.Value!.CommitTransactionAsync(cancellationToken)).ToArray());
+        await Task.WhenAll(
+            _transactionContext.Select(x => x.Value!.CommitTransactionAsync(cancellationToken)).ToArray());
     }
 
     private async Task RollbackAllDbTransactions(CancellationToken cancellationToken)
     {
-        foreach (var (provider, transaction) in _transactions)
+        foreach (var (provider, transaction) in _transactionContext)
         {
             if (transaction is null) continue;
 
             await transaction.RollbackTransactionAsync(cancellationToken);
-            _transactions.Remove(provider);
+            _transactionContext.Remove(provider);
         }
     }
 
-    private bool HashKeyExistInTransactionList(int hashKey) => _transactions.ContainsKey(hashKey);
+    private void AddDbContext(IDatabaseContext context) => _transactionContext.Add(context.GetHashCode(), context);
+
+    private bool HashKeyExistInTransactionList(int hashKey) => _transactionContext.ContainsKey(hashKey);
 }

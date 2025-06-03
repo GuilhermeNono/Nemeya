@@ -26,7 +26,6 @@ public static class ServiceExtension
         services.AddDbContext<IMainContext, MainContext>(opt =>
         {
             opt.UseSqlServer(configuration.GetConnectionString(MainConnectionName));
-            opt.UseOpenIddict();
         });
 
         services.AddDbContext<IAuditContext, AuditContext>(opt =>

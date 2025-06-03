@@ -5,7 +5,7 @@ using Idp.Domain.Database.Repository;
 using Idp.Domain.Enums;
 using Idp.Infrastructure.EFCore.Database.Context;
 
-namespace Idp.Infrastructure.EFCore.Abstractions;
+namespace Idp.Infrastructure.EFCore.Abstractions.Repositories;
 
 public abstract class AuditRepository<TEntity, TId>(AuditContext context)
     : CrudRepository<TEntity, TId>(context), IAuditRepository<TEntity, TId>

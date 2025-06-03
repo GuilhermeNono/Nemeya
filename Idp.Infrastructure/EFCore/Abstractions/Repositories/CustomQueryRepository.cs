@@ -2,7 +2,7 @@
 using Idp.Infrastructure.EFCore.Query.CustomQuery.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Idp.Infrastructure.EFCore.Abstractions;
+namespace Idp.Infrastructure.EFCore.Abstractions.Repositories;
 
 public abstract class CustomQueryRepository<TEntity> : EfContext<TEntity> where TEntity : class
 {

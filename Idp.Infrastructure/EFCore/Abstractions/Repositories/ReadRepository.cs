@@ -2,7 +2,7 @@
 using Idp.Domain.Database.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace Idp.Infrastructure.EFCore.Abstractions;
+namespace Idp.Infrastructure.EFCore.Abstractions.Repositories;
 
 public abstract class ReadRepository<TEntity, TId> : CustomQueryRepository<TEntity>, IReadRepository<TEntity, TId>
     where TEntity : class, IEntity<TId>, new()

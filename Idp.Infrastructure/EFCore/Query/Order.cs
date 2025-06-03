@@ -10,22 +10,19 @@ public sealed class Order<TResult> : IOrder<TResult>
     public Sort Sort { get; private set; } = Sort.Asc;
     public string By<TProperty>(Expression<Func<TResult, TProperty>> expression, Sort sort)
     {
-        this.Sort = sort;
+        Sort = sort;
         return Column = ClassProperty.PropertyName(expression);
     }
     
     public string By(string customOrder, Sort sort)
     {
-        this.Sort = sort;
+        Sort = sort;
         return Column = customOrder;
     }
 
     public override bool Equals(object? obj)
-    {   
-        if (obj is null) 
-            return false;
-
-        if ((obj is not Order<TResult> order))
+    {
+        if (obj is not Order<TResult> order)
             return false;
 
         return order.GetType().GUID == GetType().GUID && Equals(order);

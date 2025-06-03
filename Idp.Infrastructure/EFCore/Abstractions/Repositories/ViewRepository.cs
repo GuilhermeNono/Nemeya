@@ -2,7 +2,7 @@
 using Idp.Domain.Database.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace Idp.Infrastructure.EFCore.Abstractions;
+namespace Idp.Infrastructure.EFCore.Abstractions.Repositories;
 
 public abstract class ViewRepository<TEntity> : CustomQueryRepository<TEntity>, IViewRepository<TEntity>
     where TEntity : class, IEntityView, new()

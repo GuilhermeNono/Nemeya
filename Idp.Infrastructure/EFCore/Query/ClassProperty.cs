@@ -19,15 +19,12 @@ internal static class ClassProperty
         {
             currentExpr = RemoveUnary(currentExpr!);
 
-            if (currentExpr != null && currentExpr.NodeType == ExpressionType.MemberAccess)
+            if (currentExpr.NodeType == ExpressionType.MemberAccess)
                 currentExpr = ((MemberExpression)currentExpr).Expression;
             else
                 break;
         }
 
-        if (currentExpr == null || currentExpr.NodeType != ExpressionType.Parameter)
-            return string.Empty;
-
-        return memberExp.Member.Name;
+        return currentExpr.NodeType != ExpressionType.Parameter ? string.Empty : memberExp.Member.Name;
     }
 }

@@ -8,8 +8,7 @@ public static class ErrorMessage
     public static class Exception
     {
         public static string ExternalOrderWithInternalPagination() =>
-            "Não é possível utilizar um Order By interno(dentro do método prepare) e um pagination ou Order externo. Considere Utilizar apenas de uma maneira.";
-
+            "Não é possível declarar a ordenação nos métodos de adição. Faça isso utilizando o Método OrderBy() presente na declaração da Query.";
         public static string EntityNotFound(long id, string entityName) =>
             $"Não foi possível encontrar um registro de Id: {id} para {entityName}.";
         

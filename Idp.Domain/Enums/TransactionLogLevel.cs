@@ -2,6 +2,6 @@
 
 public enum TransactionLogLevel
 {
-    Explicit = 1,
-    Implicit = 2
+    None = 1,
+    Debug = 2
 }

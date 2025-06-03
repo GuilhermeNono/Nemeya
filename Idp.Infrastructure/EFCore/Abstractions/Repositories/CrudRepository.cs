@@ -5,7 +5,7 @@ using Idp.Domain.Enums;
 using Idp.Domain.Helpers;
 using Microsoft.EntityFrameworkCore;
 
-namespace Idp.Infrastructure.EFCore.Abstractions;
+namespace Idp.Infrastructure.EFCore.Abstractions.Repositories;
 
 public abstract class CrudRepository<TEntity, TId>
     : ReadRepository<TEntity, TId>, ICrudRepository<TEntity, TId> where TEntity : class, IEntity<TId>, new()

@@ -3,6 +3,7 @@ using Idp.Domain.Annotations;
 using Idp.Domain.Database.Transaction;
 using Idp.Domain.Enums;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Idp.Application.Members.Behaviours;
@@ -26,17 +27,17 @@ public class TransactionPipelineBehaviour<TRequest, TResponse> :
     {
         TResponse? response = default;
 
-        var transactionAnnotation = request.GetType().GetCustomAttribute<TransactionTypeAttribute>();
+        var annotation = request.GetType().GetCustomAttribute<TransactionTypeAttribute>();
+        var transactionType = annotation?.TransactionType ?? DbTransactionType.ReadUncommitted;
 
-        if (transactionAnnotation?.TransactionType is DbTransactionType.NoTransaction)
-            return await next();
-
-        var transactionType = transactionAnnotation?.TransactionType ?? DbTransactionType.ReadUncommitted;
+        if (transactionType == DbTransactionType.NoTransaction ||
+            _transactionService.IsTransactionActive && annotation?.TransactionType == null)
+            return await next(cancellationToken);
 
         try
         {
-            await _transactionService.ExecuteInTransactionContextAsync(async () => { response = await next(); },
-                transactionType, cancellationToken: cancellationToken);
+            await _transactionService.ExecuteInTransactionContextAsync(async () => { response = await next(cancellationToken); },
+                transactionType, TransactionLogLevel.None, cancellationToken, true);
         }
         catch (Exception e)
         {

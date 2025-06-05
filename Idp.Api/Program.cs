@@ -10,6 +10,7 @@ using Idp.Infrastructure.DbUp;
 using Idp.Presentation.Controllers.Abstractions;
 using MediatR;
 using Serilog;
+using Environment = Idp.Domain.Enums.Smart.Environment;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,7 +77,7 @@ if(builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (Environment.MustRenderSwaggerUi(app.Environment))
 {
     app.UseSwagger();
     app.UseSwaggerUI();

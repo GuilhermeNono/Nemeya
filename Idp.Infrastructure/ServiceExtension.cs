@@ -4,8 +4,10 @@ using Idp.CrossCutting.Configurations;
 using Idp.Domain.Database.Context;
 using Idp.Domain.Database.Transaction;
 using Idp.Domain.Helpers;
+using Idp.Domain.Services.Aws;
 using Idp.Infrastructure.EFCore.Database.Context;
 using Idp.Infrastructure.EFCore.Database.Services;
+using Idp.Infrastructure.Services.Aws;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +38,13 @@ public static class ServiceExtension
         );
 
         services.AddScoped<ITransactionService, TransactionService>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddTransient<IKmsService, KmsService>();
 
         return services;
     }

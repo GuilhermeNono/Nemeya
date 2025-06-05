@@ -30,6 +30,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.RegisterConfiguration(builder.Configuration);
 
+builder.Services.AddServices();
+
 #region | Authentication |
 
 builder.Services.ConfigureAuthentication()

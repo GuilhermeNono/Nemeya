@@ -8,12 +8,12 @@ namespace Idp.Infrastructure.EFCore.Query.CustomQuery;
 /// Ou seja, ela é útil para operações que usam consultas SQL para obter resultados sem aplicar condições específicas.
 /// <typeparam name="TResult">Classe que será retornada após a finalização da consulta</typeparam>
 /// </summary>
-public abstract class CustomQuery<TResult> : BaseQuery<TResult>, ICustomQuery<TResult> 
+public abstract class CustomQuery<TResult> : BaseQuery<TResult>, ICustomQuery<TResult> where TResult : notnull
 {
 }
 
 /// <summary>
-/// Esta classe deve ser utilizada quando você estiver trabalhando com consultas personalizadas com filtragem.
+/// Esta classe deve ser utilizada quando você estiver a trabalhar com consultas personalizadas com filtragem.
 /// Ou seja, ela é útil para operações que usam consultas SQL para obter resultados específicos aplicando condições predefinidas.
 /// <typeparam name="TResult">Classe que será retornada após a finalização da consulta</typeparam>
 /// <typeparam name="TFilter">Classe para adicionar parâmetros condicionais à consulta</typeparam>

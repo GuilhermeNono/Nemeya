@@ -165,3 +165,22 @@ CREATE TABLE Ath_LoginAttempts(
     UserAgent varchar(140) not null,
     ItWasSuccessful bit not null
 )
+
+go
+
+CREATE TABLE Ath_SigningKeys
+(
+    Id          UNIQUEIDENTIFIER PRIMARY KEY,
+    KeyId       NVARCHAR(128)  NOT NULL
+        CONSTRAINT UK_SigningKey_KeyId UNIQUE,
+    PublicJWK   NVARCHAR(MAX)  NOT NULL
+        CONSTRAINT UK_SigningKey_KeyId UNIQUE,
+    CanIssue    BIT            NOT NULL
+        CONSTRAINT UK_SigningKey_KeyId UNIQUE,
+    ExpiredAt   DATETIMEOFFSET NULL,
+    GracePeriod DATETIMEOFFSET NULL,
+    Algorithm   NVARCHAR(20)   NOT NULL,
+    Operation   char(7)        not null,
+    ChangedBy   varchar(254)   not null,
+    ChangedAt   DATETIMEOFFSET not null
+)

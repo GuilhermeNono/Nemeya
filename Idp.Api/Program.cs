@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Hangfire;
 using Idp.Api.Extensions;
 using Idp.Api.Middlewares;
+using Idp.Api.Seeder;
 using Idp.Application;
 using Idp.Application.Members.Behaviours;
 using Idp.Infrastructure;
@@ -76,6 +77,8 @@ if(builder.Environment.IsDevelopment())
     builder.Services.AddHangfireServer();
 
 #endregion
+
+builder.Services.AddHostedService<JsonWebKeySeeder>();
 
 var app = builder.Build();
 

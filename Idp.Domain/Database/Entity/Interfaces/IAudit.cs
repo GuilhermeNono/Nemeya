@@ -7,5 +7,5 @@ public interface IAudit
     public string Operation { get; }
     public InternalOperation InternalOperation { get; set; }
     public string ChangedBy { get; set; } 
-    public DateTime ChangedAt { get; set; }
+    public DateTimeOffset ChangedAt { get; set; }
 }

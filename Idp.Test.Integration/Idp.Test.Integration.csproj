@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+      <PackageReference Include="Testcontainers.MsSql" Version="4.6.0" />
+      <PackageReference Include="xunit" Version="2.9.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Idp.Api\Idp.Api.csproj" />
+      <ProjectReference Include="..\Idp.Application\Idp.Application.csproj" />
+      <ProjectReference Include="..\Idp.Contract\Idp.Contract.csproj" />
+      <ProjectReference Include="..\Idp.CrossCutting\Idp.CrossCutting.csproj" />
+      <ProjectReference Include="..\Idp.Domain\Idp.Domain.csproj" />
+      <ProjectReference Include="..\Idp.Infrastructure\Idp.Infrastructure.csproj" />
+      <ProjectReference Include="..\Idp.Presentation\Idp.Presentation.csproj" />
+    </ItemGroup>
+
+</Project>

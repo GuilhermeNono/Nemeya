@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using Amazon;
 using Amazon.KeyManagementService;
 using Amazon.KeyManagementService.Model;
 using Amazon.Runtime;
+using Idp.CrossCutting.Configurations;
 using Idp.Domain.Services.Aws;
 
 namespace Idp.Infrastructure.Services.Aws;
@@ -11,17 +11,16 @@ public class KmsService : IKmsService
 {
     private readonly AmazonKeyManagementServiceClient _client;
 
-    public KmsService()
+    public KmsService(IAwsConfiguration awsConfiguration)
     {
         var config = new AmazonKeyManagementServiceConfig
         {
-            ServiceURL = "https://localhost.localstack.cloud:4566",
-            UseHttp = false,
-            AuthenticationRegion = "us-east-1",
-           
+            ServiceURL = awsConfiguration.ServiceUrl,
+            UseHttp = awsConfiguration.UseHttp,
+            AuthenticationRegion = awsConfiguration.AuthenticationRegion
         };
-            
-        _client = new AmazonKeyManagementServiceClient(new BasicAWSCredentials("test", "test"), config);
+
+        _client = new AmazonKeyManagementServiceClient(new BasicAWSCredentials(awsConfiguration.AccessKey, awsConfiguration.SecretKey), config);
     }
 
     public async Task<string> CreateKeyAsync(string aliasName)
@@ -33,7 +32,7 @@ public class KmsService : IKmsService
             KeySpec = KeySpec.ECC_NIST_P256,
             Origin = OriginType.AWS_KMS
         });
-        
+
         var keyId = key.KeyMetadata.KeyId;
 
         await _client.CreateAliasAsync(new CreateAliasRequest
@@ -52,7 +51,7 @@ public class KmsService : IKmsService
             Plaintext = new MemoryStream(Encoding.UTF8.GetBytes(plainText)),
             KeyId = keyId
         };
-        
+
         var response = await _client.EncryptAsync(request);
         return response.CiphertextBlob.ToArray();
     }
@@ -63,11 +62,11 @@ public class KmsService : IKmsService
         {
             CiphertextBlob = new MemoryStream(encryptedData)
         };
-        
+
         var response = await _client.DecryptAsync(request);
         return Encoding.UTF8.GetString(response.Plaintext.ToArray());
-    }    
-    
+    }
+
     public async Task<bool> VerifySignAsync(string keyId, byte[] data, byte[] signature)
     {
         var response = await _client.VerifyAsync(new VerifyRequest
@@ -81,7 +80,7 @@ public class KmsService : IKmsService
 
         return response.SignatureValid ?? false;
     }
-    
+
     public async Task<byte[]> SignAsync(string keyId, byte[] data)
     {
         var response = await _client.SignAsync(new SignRequest
@@ -101,9 +100,28 @@ public class KmsService : IKmsService
         {
             KeyId = key
         });
-        
-        var keyInBytes =  response.PublicKey.ToArray();
-        
-        return Encoding.UTF8.GetString(keyInBytes);
+
+        var keyInBytes = response.PublicKey.ToArray();
+
+        return ConvertDerToPem(keyInBytes);
+    }
+
+    private static string ConvertDerToPem(byte[] derBytes, string keyType = "PUBLIC KEY")
+    {
+        var base64 = Convert.ToBase64String(derBytes);
+        var sb = new StringBuilder();
+        sb.AppendLine($"-----BEGIN {keyType}-----");
+
+        var offset = 0;
+        const int lineLength = 64;
+        while (offset < base64.Length)
+        {
+            var lineEnd = Math.Min(lineLength, base64.Length - offset);
+            sb.AppendLine(base64.Substring(offset, lineEnd));
+            offset += lineEnd;
+        }
+
+        sb.AppendLine($"-----END {keyType}-----");
+        return sb.ToString();
     }
 }

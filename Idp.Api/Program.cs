@@ -6,12 +6,12 @@ using Idp.Api.Middlewares;
 using Idp.Api.Seeder;
 using Idp.Application;
 using Idp.Application.Members.Behaviours;
+using Idp.Domain.Enums.Smart;
 using Idp.Infrastructure;
 using Idp.Infrastructure.DbUp;
 using Idp.Presentation.Controllers.Abstractions;
 using MediatR;
 using Serilog;
-using Environment = Idp.Domain.Enums.Smart.Environment;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,7 +82,7 @@ builder.Services.AddHostedService<JsonWebKeySeeder>();
 
 var app = builder.Build();
 
-if (Environment.MustRenderSwaggerUi(app.Environment))
+if (EnvironmentsVariable.MustRenderSwaggerUi(app.Environment))
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -90,7 +90,7 @@ if (Environment.MustRenderSwaggerUi(app.Environment))
 
 #region | DbUp |
 
-app.AddDbUp(app.Configuration);
+app.AddMigrationService(app.Configuration);
 
 #endregion
 

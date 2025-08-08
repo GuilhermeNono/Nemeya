@@ -2,6 +2,7 @@
 using Idp.Domain.Database.Entity.Interfaces;
 using Idp.Domain.Database.Repository;
 using Idp.Domain.Enums;
+using Idp.Domain.Enums.Smart;
 using Idp.Domain.Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -99,12 +100,12 @@ public abstract class CrudRepository<TEntity, TId>
     }
 
     protected static void UpdateAuditOfEntity(TEntity entity, InternalOperation internalOperation,
-        string userWhoUpdate = UserHelper.System)
+        string userWhoUpdate = "")
     {
         if (entity is not IAudit audit) return;
 
         if (string.IsNullOrEmpty(userWhoUpdate))
-            userWhoUpdate = UserHelper.System;
+            userWhoUpdate = DefaultUserOperation.System;
 
         audit.ChangedAt = DateTime.Now;
         audit.ChangedBy = userWhoUpdate;
@@ -112,14 +113,14 @@ public abstract class CrudRepository<TEntity, TId>
     }
 
     private static void UpdateAuditOfEntity(IEnumerable<TEntity> entities, InternalOperation internalOperation,
-        string? userWhoUpdate = UserHelper.System)
+        string? userWhoUpdate)
     {
         foreach (var entity in entities)
         {
             if (entity is not IAudit audit) continue;
 
             if (string.IsNullOrEmpty(userWhoUpdate))
-                userWhoUpdate = UserHelper.System;
+                userWhoUpdate = DefaultUserOperation.System;
 
             audit.ChangedAt = DateTime.Now;
             audit.ChangedBy = userWhoUpdate;

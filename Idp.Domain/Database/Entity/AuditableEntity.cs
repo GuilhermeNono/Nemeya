@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Idp.Domain.Database.Entity.Interfaces;
 using Idp.Domain.Enums;
+using Idp.Domain.Enums.Smart;
 using Idp.Domain.Helpers;
 
 namespace Idp.Domain.Database.Entity;
@@ -15,6 +16,6 @@ public abstract class AuditableEntity<TId> : Entity<TId>, IAudit
         get => Enum.Parse<InternalOperation>(Operation, true);
         set => Operation = value.ToString();
     }
-    public string ChangedBy { get; set; } = UserHelper.System;
-    public DateTime ChangedAt { get; set; }
+    public string ChangedBy { get; set; } = DefaultUserOperation.System;
+    public DateTimeOffset ChangedAt { get; set; }
 }

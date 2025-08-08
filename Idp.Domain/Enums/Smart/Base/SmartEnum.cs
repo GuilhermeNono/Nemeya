@@ -1,7 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Idp.Domain.Enums.Smart.Base;
 
+[ExcludeFromCodeCoverage]
 public abstract class SmartEnum<TEnum> : IEquatable<SmartEnum<TEnum>> where TEnum : SmartEnum<TEnum>
 {
     protected string Value { get; }
@@ -90,6 +92,6 @@ public abstract class SmartEnum<TEnum> : IEquatable<SmartEnum<TEnum>> where TEnu
     {
         return !(a == b);
     }
-
+    
     #endregion
 }

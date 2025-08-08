@@ -93,5 +93,7 @@ public static class ErrorMessage
 
         public static string SignatureIsInvalid() =>
             "Não foi possivel completar uma transação com a assinatura informada.";
+
+        public static string MigrationConnection(string? connectionString) => $"Não foi possivel estabelecer uma conexão estavel com \"{connectionString ?? "null"}\".";
     }
 }

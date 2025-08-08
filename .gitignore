@@ -260,6 +260,12 @@ paket-files/
 ### dotenv ###
 .env
 
+volume
+
+volume/
+
+volume/**
+
 # End of https://www.toptal.com/developers/gitignore/api/dotenv
 
 

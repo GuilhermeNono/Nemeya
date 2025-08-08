@@ -6,12 +6,9 @@ using Idp.Infrastructure.Persistence.Main.SigningKey.Queries.Find.LatestIssueKey
 
 namespace Idp.Infrastructure.Persistence.Main.SigningKey;
 
-public class SigningKeyRepository : CrudRepository<SigningKeyEntity, Guid>, ISigningKeyRepository
+public class SigningKeyRepository(MainContext context)
+    : CrudRepository<SigningKeyEntity, Guid>(context), ISigningKeyRepository
 {
-    public SigningKeyRepository(MainContext context) : base(context)
-    {
-    }
-
     public Task<SigningKeyEntity?> FindLatestIssueKey()
     {
         var query = new LatestIssueKeyQuery(new LatestIssueKeyFilter());

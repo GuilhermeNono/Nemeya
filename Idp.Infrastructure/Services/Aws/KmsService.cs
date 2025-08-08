@@ -94,4 +94,16 @@ public class KmsService : IKmsService
 
         return response.Signature.ToArray();
     }
+
+    public async Task<string> GetPublicKey(string key)
+    {
+        var response = await _client.GetPublicKeyAsync(new GetPublicKeyRequest
+        {
+            KeyId = key
+        });
+        
+        var keyInBytes =  response.PublicKey.ToArray();
+        
+        return Encoding.UTF8.GetString(keyInBytes);
+    }
 }

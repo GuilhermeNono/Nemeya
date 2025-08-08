@@ -6,6 +6,6 @@ public interface IAudit
 {
     public string Operation { get; }
     public InternalOperation InternalOperation { get; set; }
-    public string LastChangeBy { get; set; } 
-    public DateTime LastChangeAt { get; set; }
+    public string ChangedBy { get; set; } 
+    public DateTime ChangedAt { get; set; }
 }

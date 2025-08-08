@@ -30,6 +30,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Idp.Application\Idp.Application.csproj" />
+      <ProjectReference Include="..\Idp.CrossCutting\Idp.CrossCutting.csproj" />
       <ProjectReference Include="..\Idp.Infrastructure\Idp.Infrastructure.csproj" />
       <ProjectReference Include="..\Idp.Presentation\Idp.Presentation.csproj" />
     </ItemGroup>

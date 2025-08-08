@@ -15,6 +15,6 @@ public abstract class AuditableEntity<TId> : Entity<TId>, IAudit
         get => Enum.Parse<InternalOperation>(Operation, true);
         set => Operation = value.ToString();
     }
-    public string LastChangeBy { get; set; } = UserHelper.System;
-    public DateTime LastChangeAt { get; set; }
+    public string ChangedBy { get; set; } = UserHelper.System;
+    public DateTime ChangedAt { get; set; }
 }

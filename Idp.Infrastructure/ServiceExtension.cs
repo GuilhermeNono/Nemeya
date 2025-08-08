@@ -4,9 +4,22 @@ using Idp.CrossCutting.Configurations;
 using Idp.Domain.Database.Context;
 using Idp.Domain.Database.Transaction;
 using Idp.Domain.Helpers;
+using Idp.Domain.Repositories;
 using Idp.Domain.Services.Aws;
 using Idp.Infrastructure.EFCore.Database.Context;
 using Idp.Infrastructure.EFCore.Database.Services;
+using Idp.Infrastructure.Persistence.Main.Authorization.Code;
+using Idp.Infrastructure.Persistence.Main.Client;
+using Idp.Infrastructure.Persistence.Main.Client.Redirect;
+using Idp.Infrastructure.Persistence.Main.Client.Scope;
+using Idp.Infrastructure.Persistence.Main.Consent;
+using Idp.Infrastructure.Persistence.Main.Consent.Scope;
+using Idp.Infrastructure.Persistence.Main.Login.Attempt;
+using Idp.Infrastructure.Persistence.Main.Person;
+using Idp.Infrastructure.Persistence.Main.Scope;
+using Idp.Infrastructure.Persistence.Main.SigningKey;
+using Idp.Infrastructure.Persistence.Main.Token;
+using Idp.Infrastructure.Persistence.Main.User;
 using Idp.Infrastructure.Services.Aws;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +64,18 @@ public static class ServiceExtension
 
     public static IServiceCollection AddMainRepositories(this IServiceCollection services)
     {
+        services.AddScoped<ISigningKeyRepository, SigningKeyRepository>();
+        services.AddScoped<IAuthorizationCodeRepository, AuthorizationCodeRepository>();
+        services.AddScoped<IClientRedirectRepository, ClientRedirectRepository>();
+        services.AddScoped<IClientRepository, ClientRepository>();
+        services.AddScoped<IClientScopeRepository, ClientScopeRepository>();
+        services.AddScoped<IConsentRepository, ConsentRepository>();
+        services.AddScoped<IConsentScopeRepository, ConsentScopeRepository>();
+        services.AddScoped<ILoginAttemptRepository, LoginAttemptRepository>();
+        services.AddScoped<IPersonRepository, PersonRepository>();
+        services.AddScoped<IScopeRepository, ScopeRepository>();
+        services.AddScoped<ITokenRepository, TokenRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
 

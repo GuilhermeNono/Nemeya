@@ -7,4 +7,5 @@ public interface IKmsService
     Task<string> CreateKeyAsync(string aliasName);
     Task<bool> VerifySignAsync(string keyId, byte[] data, byte[] signature);
     Task<byte[]> SignAsync(string keyId, byte[] data);
+    Task<string> GetPublicKey(string key);
 }

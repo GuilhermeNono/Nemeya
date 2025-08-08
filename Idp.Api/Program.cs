@@ -71,7 +71,7 @@ builder.Services.AddHangfire(config => config
     .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
-    .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangFire")));
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("MainDatabase")));
 
 if(builder.Environment.IsDevelopment())
     builder.Services.AddHangfireServer();

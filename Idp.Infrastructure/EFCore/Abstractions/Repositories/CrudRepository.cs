@@ -106,8 +106,8 @@ public abstract class CrudRepository<TEntity, TId>
         if (string.IsNullOrEmpty(userWhoUpdate))
             userWhoUpdate = UserHelper.System;
 
-        audit.LastChangeAt = DateTime.Now;
-        audit.LastChangeBy = userWhoUpdate;
+        audit.ChangedAt = DateTime.Now;
+        audit.ChangedBy = userWhoUpdate;
         audit.InternalOperation = internalOperation;
     }
 
@@ -121,8 +121,8 @@ public abstract class CrudRepository<TEntity, TId>
             if (string.IsNullOrEmpty(userWhoUpdate))
                 userWhoUpdate = UserHelper.System;
 
-            audit.LastChangeAt = DateTime.Now;
-            audit.LastChangeBy = userWhoUpdate!;
+            audit.ChangedAt = DateTime.Now;
+            audit.ChangedBy = userWhoUpdate;
             audit.InternalOperation = internalOperation;
         }
     }

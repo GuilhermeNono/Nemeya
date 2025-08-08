@@ -1,186 +1,186 @@
 ﻿CREATE TABLE Ath_Clients
 (
-    Id        uniqueidentifier
-        constraint PK_Client primary key not null
-        constraint DF_Client default NEWID(),
-    Name      varchar(254)               not null,
-    ClientId  varchar(254)               not null,
-    Secret    varchar(254)               not null,
-    Operation char(7)                    not null,
-    ChangedBy varchar(254)               not null,
-    ChangedAt DATETIMEOFFSET             not null
+    Id        uniqueidentifier NOT NULL
+        CONSTRAINT PK_Client PRIMARY KEY
+        CONSTRAINT DF_Client DEFAULT NEWID(),
+    Name      varchar(254) NOT NULL,
+    ClientId  varchar(254) NOT NULL,
+    Secret    varchar(254) NOT NULL,
+    Operation char(7) NOT NULL,
+    ChangedBy varchar(254) NOT NULL,
+    ChangedAt datetimeoffset NOT NULL
 )
-    go
+GO
 
 CREATE TABLE Ath_Users
 (
-    Id           uniqueidentifier
-        constraint PK_User primary key not null
-        constraint DF_User default NEWID(),
-    Username     varchar(254)          not null,
-    Email        varchar(254)          not null,
-    PasswordHash varchar(254)          not null,
-    HasMfa       BIT                   not null,
-    LastLoginAt  DATETIMEOFFSET        NOT NULL,
-    IsActive     BIT                   NOT NULL,
-    Operation    char(7)               not null,
-    ChangedBy    varchar(254)          not null,
-    ChangedAt    DATETIMEOFFSET        not null
+    Id           uniqueidentifier NOT NULL
+        CONSTRAINT PK_User PRIMARY KEY
+        CONSTRAINT DF_User DEFAULT NEWID(),
+    Username     varchar(254) NOT NULL,
+    Email        varchar(254) NOT NULL,
+    PasswordHash varchar(254) NOT NULL,
+    HasMfa       bit NOT NULL,
+    LastLoginAt  datetimeoffset NOT NULL,
+    IsActive     bit NOT NULL,
+    Operation    char(7) NOT NULL,
+    ChangedBy    varchar(254) NOT NULL,
+    ChangedAt    datetimeoffset NOT NULL
 )
-    go
+GO
 
 CREATE TABLE Ath_Scopes
 (
-    Id          int
-        constraint PK_Scope primary key not null,
-    Name        varchar(254)            not null,
-    Description varchar(254)            not null
+    Id          int NOT NULL
+        CONSTRAINT PK_Scope PRIMARY KEY,
+    Name        varchar(254) NOT NULL,
+    Description varchar(254) NOT NULL
 )
-    go
+GO
 
 CREATE TABLE Ath_ClientScopes
 (
-    Id        uniqueidentifier not null
-        constraint PK_ClientScope primary key
-        constraint DF_ClientScope default NEWID(),
-    ScopeId   int              not null
-        constraint FK_ClientScope_Scopes references Ath_Scopes (Id),
-    ClientId  uniqueidentifier not null
-        constraint FK_ClientScope_Clients references Ath_Clients (Id),
-    Operation char(7)          not null,
-    ChangedBy varchar(254)     not null,
-    ChangedAt DATETIMEOFFSET   not null
+    Id        uniqueidentifier NOT NULL
+        CONSTRAINT PK_ClientScope PRIMARY KEY
+        CONSTRAINT DF_ClientScope DEFAULT NEWID(),
+    ScopeId   int NOT NULL
+        CONSTRAINT FK_ClientScope_Scopes REFERENCES Ath_Scopes (Id),
+    ClientId  uniqueidentifier NOT NULL
+        CONSTRAINT FK_ClientScope_Clients REFERENCES Ath_Clients (Id),
+    Operation char(7) NOT NULL,
+    ChangedBy varchar(254) NOT NULL,
+    ChangedAt datetimeoffset NOT NULL
 )
-    GO
+GO
 
 CREATE INDEX IDX_ClientScope_ClientId_ScopedId ON Ath_ClientScopes (ScopeId, ClientId)
-    GO
+GO
 
 CREATE TABLE Ath_ClientRedirects
 (
-    Id        uniqueidentifier not null
-        constraint PK_ClientRedirect primary key
-        constraint DF_ClientRedirect default NEWID(),
-    Uri       varchar(600)     not null,
-    ClientId  uniqueidentifier not null
-        constraint FK_ClientRedirect_Clients references Ath_Clients (Id),
-    Operation char(7)          not null,
-    ChangedBy varchar(254)     not null,
-    ChangedAt DATETIMEOFFSET   not null
+    Id        uniqueidentifier NOT NULL
+        CONSTRAINT PK_ClientRedirect PRIMARY KEY
+        CONSTRAINT DF_ClientRedirect DEFAULT NEWID(),
+    Uri       varchar(600) NOT NULL,
+    ClientId  uniqueidentifier NOT NULL
+        CONSTRAINT FK_ClientRedirect_Clients REFERENCES Ath_Clients (Id),
+    Operation char(7) NOT NULL,
+    ChangedBy varchar(254) NOT NULL,
+    ChangedAt datetimeoffset NOT NULL
 )
-    GO
+GO
 
 CREATE INDEX IDX_ClientRedirect_ClientId ON Ath_ClientRedirects (ClientId)
-    GO
+GO
 
 CREATE TABLE Ath_Tokens
 (
-    Id           uniqueidentifier not null
-        constraint PK_Token primary key
-        constraint DF_Token default NEWID(),
-    UserId       uniqueidentifier not null
-        constraint FK_Token_Users references Ath_Users (Id),
-    ClientId     uniqueidentifier not null
-        constraint FK_Token_Clients references Ath_Clients (Id),
-    ExpiresAt    DATETIMEOFFSET   NOT NULL,
-    RefreshToken varchar(160)     NOT NULL,
-    Operation    char(7)          not null,
-    ChangedBy    varchar(254)     not null,
-    ChangedAt    DATETIMEOFFSET   not null
+    Id           uniqueidentifier NOT NULL
+        CONSTRAINT PK_Token PRIMARY KEY
+        CONSTRAINT DF_Token DEFAULT NEWID(),
+    UserId       uniqueidentifier NOT NULL
+        CONSTRAINT FK_Token_Users REFERENCES Ath_Users (Id),
+    ClientId     uniqueidentifier NOT NULL
+        CONSTRAINT FK_Token_Clients REFERENCES Ath_Clients (Id),
+    ExpiresAt    datetimeoffset NOT NULL,
+    RefreshToken varchar(160) NOT NULL,
+    Operation    char(7) NOT NULL,
+    ChangedBy    varchar(254) NOT NULL,
+    ChangedAt    datetimeoffset NOT NULL
 )
-    GO
+GO
 
 CREATE TABLE Ath_AuthorizationCodes
 (
-    Id            uniqueidentifier not null
-        constraint PK_AuthorizationCode primary key
-        constraint DF_AuthorizationCode default NEWID(),
-    UserId        uniqueidentifier not null
-        constraint FK_AuthorizationCode_Users REFERENCES Ath_Users (Id),
-    ClientId      uniqueidentifier not null
-        constraint FK_AuthorizationCode_Clients references Ath_Clients (Id),
-    Code          varchar(256)     not null,
-    CodeChallenge varchar(128)     NOT NULL,
-    State         varchar(180) null,
-    IsUsed        BIT              NOT NULL,
-    UsedAt        DATETIMEOFFSET NULL,
-    ExpiresAt     DATETIMEOFFSET   NOT NULL,
-    Operation     char(7)          not null,
-    ChangedBy     varchar(254)     not null,
-    ChangedAt     DATETIMEOFFSET   not null
+    Id            uniqueidentifier NOT NULL
+        CONSTRAINT PK_AuthorizationCode PRIMARY KEY
+        CONSTRAINT DF_AuthorizationCode DEFAULT NEWID(),
+    UserId        uniqueidentifier NOT NULL
+        CONSTRAINT FK_AuthorizationCode_Users REFERENCES Ath_Users (Id),
+    ClientId      uniqueidentifier NOT NULL
+        CONSTRAINT FK_AuthorizationCode_Clients REFERENCES Ath_Clients (Id),
+    Code          varchar(256) NOT NULL,
+    CodeChallenge varchar(128) NOT NULL,
+    State         varchar(180) NULL,
+    IsUsed        bit NOT NULL,
+    UsedAt        datetimeoffset NULL,
+    ExpiresAt     datetimeoffset NOT NULL,
+    Operation     char(7) NOT NULL,
+    ChangedBy     varchar(254) NOT NULL,
+    ChangedAt     datetimeoffset NOT NULL
 )
-    GO
+GO
 
 CREATE TABLE Ath_Consent
 (
-    Id        bigint           not null
-        constraint PK_AuthorizationConsent primary key identity,
-    UserId    uniqueidentifier not null
-        constraint FK_AuthorizationConsent_Users REFERENCES Ath_Users (Id),
-    ClientId  uniqueidentifier not null
-        constraint FK_AuthorizationConsent_Clients references Ath_Clients (Id),
-    GrantedAt DATETIMEOFFSET   NOT NULL,
-    ExpiresAt DATETIMEOFFSET NULL,
-    RevokedAt DATETIMEOFFSET NULL,
-    Operation char(7)          not null,
-    ChangedBy varchar(254)     not null,
-    ChangedAt DATETIMEOFFSET   not null
+    Id        bigint NOT NULL
+        CONSTRAINT PK_AuthorizationConsent PRIMARY KEY IDENTITY,
+    UserId    uniqueidentifier NOT NULL
+        CONSTRAINT FK_AuthorizationConsent_Users REFERENCES Ath_Users (Id),
+    ClientId  uniqueidentifier NOT NULL
+        CONSTRAINT FK_AuthorizationConsent_Clients REFERENCES Ath_Clients (Id),
+    GrantedAt datetimeoffset NOT NULL,
+    ExpiresAt datetimeoffset NULL,
+    RevokedAt datetimeoffset NULL,
+    Operation char(7) NOT NULL,
+    ChangedBy varchar(254) NOT NULL,
+    ChangedAt datetimeoffset NOT NULL
 )
-    GO
+GO
 
 CREATE TABLE Ath_ConsentScopes
 (
-    Id bigint not null
-        constraint PK_AuthorizationConsentScope primary key identity,
-    ConsentId bigint not null
-        constraint FK_AuthorizationConsentScope_Consent references Ath_Consent(Id),
-    ScopeId int not null constraint FK_AuthorizationConsentScope_Scope references Ath_Scopes(Id),
-    ConsentedAt datetimeoffset not null
+    Id bigint NOT NULL
+        CONSTRAINT PK_AuthorizationConsentScope PRIMARY KEY IDENTITY,
+    ConsentId bigint NOT NULL
+        CONSTRAINT FK_AuthorizationConsentScope_Consent REFERENCES Ath_Consent(Id),
+    ScopeId int NOT NULL
+        CONSTRAINT FK_AuthorizationConsentScope_Scope REFERENCES Ath_Scopes(Id),
+    ConsentedAt datetimeoffset NOT NULL
 )
+GO
 
-go
-
-CREATE TABLE Ppl_People(
-    Id uniqueidentifier not null 
-        constraint PK_People primary key
-        constraint FK_People_User references Ath_Users(Id),
-    FirstName varchar(254) not null,
-    LastName varchar(254) not null,
-    DocumentHash varchar(254) not null,
-    PhoneNumber varchar(40) null,
-    BirthDate Date null,
-    Operation char(7)          not null,
-    ChangedBy varchar(254)     not null,
-    ChangedAt DATETIMEOFFSET   not null
+CREATE TABLE Ppl_People
+(
+    Id uniqueidentifier NOT NULL
+        CONSTRAINT PK_People PRIMARY KEY
+        CONSTRAINT FK_People_User FOREIGN KEY REFERENCES Ath_Users(Id),
+    FirstName varchar(254) NOT NULL,
+    LastName varchar(254) NOT NULL,
+    DocumentHash varchar(254) NOT NULL,
+    PhoneNumber varchar(40) NULL,
+    BirthDate date NULL,
+    Operation char(7) NOT NULL,
+    ChangedBy varchar(254) NOT NULL,
+    ChangedAt datetimeoffset NOT NULL
 )
+GO
 
-go
-
-CREATE TABLE Ath_LoginAttempts(
-    Id bigint not null constraint PK_AuthorizationLoginAttempt primary key identity,
-    UserId    uniqueidentifier not null
-        constraint FK_AuthorizationLoginAttempt_Users REFERENCES Ath_Users (Id),
-    IpAddress varchar(60) not null,
-    AttemptAt datetimeoffset not null,
-    UserAgent varchar(140) not null,
-    ItWasSuccessful bit not null
+CREATE TABLE Ath_LoginAttempts
+(
+    Id bigint NOT NULL CONSTRAINT PK_AuthorizationLoginAttempt PRIMARY KEY IDENTITY,
+    UserId    uniqueidentifier NOT NULL
+        CONSTRAINT FK_AuthorizationLoginAttempt_Users REFERENCES Ath_Users (Id),
+    IpAddress varchar(60) NOT NULL,
+    AttemptAt datetimeoffset NOT NULL,
+    UserAgent varchar(140) NOT NULL,
+    ItWasSuccessful bit NOT NULL
 )
-
-go
+GO
 
 CREATE TABLE Ath_SigningKeys
 (
-    Id          UNIQUEIDENTIFIER PRIMARY KEY,
-    KeyId       NVARCHAR(128)  NOT NULL
-        CONSTRAINT UK_SigningKey_KeyId UNIQUE,
-    PublicJWK   NVARCHAR(MAX)  NOT NULL
-        CONSTRAINT UK_SigningKey_KeyId UNIQUE,
-    CanIssue    BIT            NOT NULL
-        CONSTRAINT UK_SigningKey_KeyId UNIQUE,
-    ExpiredAt   DATETIMEOFFSET NULL,
-    GracePeriod DATETIMEOFFSET NULL,
-    Algorithm   NVARCHAR(20)   NOT NULL,
-    Operation   char(7)        not null,
-    ChangedBy   varchar(254)   not null,
-    ChangedAt   DATETIMEOFFSET not null
+    Id          uniqueidentifier NOT NULL
+        CONSTRAINT PK_SigningKey PRIMARY KEY,
+    KeyId       nvarchar(128) NOT NULL
+        CONSTRAINT UQ_SigningKey_KeyId UNIQUE,
+    PublicJWK   nvarchar(max) NOT NULL,
+    CanIssue    bit NOT NULL,
+    ExpiredAt   datetimeoffset NULL,
+    GracePeriod datetimeoffset NULL,
+    Algorithm   nvarchar(20) NOT NULL,
+    Operation   char(7) NOT NULL,
+    ChangedBy   varchar(254) NOT NULL,
+    ChangedAt   datetimeoffset NOT NULL
 )
+GO

@@ -13,10 +13,8 @@ namespace Idp.Infrastructure.DbUp;
 public static class DbUpExtension
 {
     private const string ServerConnectionName = "MainDatabase";
-    private const string AuditServerConnectionName = "AuditDatabase";
-    private const string JobServerConnectionName = "HangFire";
     
-    private static readonly IReadOnlyList<string> ServerConnections = [ServerConnectionName, AuditServerConnectionName, JobServerConnectionName];
+    private static readonly IReadOnlyList<string> ServerConnections = [ServerConnectionName];
 
     public static void AddDbUp(this IApplicationBuilder application,
         IConfiguration configuration)
@@ -30,7 +28,6 @@ public static class DbUpExtension
         
         RunFunctionsDbUp(application, configuration);
         RunMainDbUp(application, configuration);
-        RunAuditDbUp(application, configuration);
     }
     
     private static IApplicationBuilder RunFunctionsDbUp( IApplicationBuilder application,
@@ -66,21 +63,6 @@ public static class DbUpExtension
         if (!result.Successful)
             throw new DatabaseMigrationFailed();
         Console.WriteLine("| Checagem de migração do Banco Finalizada |\n");
-
-        return application;
-    }
-
-    private static IApplicationBuilder RunAuditDbUp( IApplicationBuilder application, IConfiguration configuration)
-    {
-        Console.WriteLine("| Checando arquivos de migração do Banco de Auditoria |");
-        var connectionString = configuration.GetConnectionString(AuditServerConnectionName);
-
-        var upgrader = ConfigureEngine(connectionString!, "Audit", "Versions");
-
-        var result = upgrader.PerformUpgrade();
-        if (!result.Successful)
-            throw new DatabaseMigrationFailed();
-        Console.WriteLine("| Checagem de migração do Banco de Auditoria Finalizada |\n");
 
         return application;
     }

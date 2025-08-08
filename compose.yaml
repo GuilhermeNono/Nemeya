@@ -41,10 +41,10 @@
       - "127.0.0.1:443:443"              
     environment:
       - SERVICES=kms
-      - LOCALSTACK_AUTH_TOKEN=ls-ziceGOpi-7304-7955-QeFa-HITIpacU80f8  
-      - DEBUG=1
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_SECRET}
       - DEFAULT_REGION=us-east-1
       - LOCALSTACK_SSL=true
+      - USE_SSL=1
       - SKIP_SSL_CERT_DOWNLOAD=1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test

@@ -266,6 +266,8 @@ volume/
 
 volume/**
 
+IdentityProvider.sln.DotSettings.user
+
 # End of https://www.toptal.com/developers/gitignore/api/dotenv
 
 

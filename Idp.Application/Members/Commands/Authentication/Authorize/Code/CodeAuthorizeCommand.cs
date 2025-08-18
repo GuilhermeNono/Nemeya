@@ -7,9 +7,10 @@ using Idp.Domain.Objects;
 namespace Idp.Application.Members.Commands.Authentication.Authorize.Code;
 
 public record CodeAuthorizeCommand(
+    ResponseType ResponseType,
     string ClientId,
     string RedirectUri,
-    string[] Scopes,
+    string Scopes,
     string State,
     string CodeChallenge,
     CodeChallengeMethod CodeChallengeMethod,
@@ -17,7 +18,7 @@ public record CodeAuthorizeCommand(
 {
     public static CodeAuthorizeCommand ToCommand(CodeAuthorizeRequest request, LoggedPerson loggedPerson)
     {
-        return new CodeAuthorizeCommand(request.ClientId, request.RedirectUri, request.Scopes, request.State,
+        return new CodeAuthorizeCommand(request.ResponseType, request.ClientId, request.RedirectUri, request.Scopes, request.State,
             request.CodeChallenge, request.CodeChallengeMethod, loggedPerson);
     }
 }

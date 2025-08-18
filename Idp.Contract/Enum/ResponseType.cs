@@ -1,6 +1,6 @@
 ﻿namespace Idp.Contract.Enum;
 
-public class ResponseType
+public enum ResponseType
 {
-    
+    Code = 1
 }

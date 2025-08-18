@@ -1,4 +1,5 @@
-﻿using Idp.Application.Members.Commands.Authentication.Authorize.Code;
+﻿using System.Net;
+using Idp.Application.Members.Commands.Authentication.Authorize.Code;
 using Idp.Contract.Authentication.Request;
 using Idp.Domain.Annotations;
 using Idp.Domain.Enums;
@@ -22,6 +23,9 @@ public class AuthenticationController : ApiController
     [HttpPost("authorize")]
     [Consumes("application/x-www-form-urlencoded")]
     [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> AuthorizeWithCodeChallengeAsync([FromForm]CodeAuthorizeRequest request)
     {
         return Ok(await Sender.Send(CodeAuthorizeCommand.ToCommand(request, LoggedPerson)));

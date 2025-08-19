@@ -79,11 +79,6 @@ public static class ServiceExtension
         return services;
     }
 
-    public static IServiceCollection AddAuditRepositories(this IServiceCollection services)
-    {
-        return services;
-    }
-
     #endregion
 
     #region || Auth ||

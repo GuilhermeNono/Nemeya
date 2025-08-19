@@ -23,9 +23,16 @@ public abstract class CustomQueryRepository<TEntity> : EfContext<TEntity> where 
             .FirstOrDefault());
     }
     
-    protected Task<TResult> QueryValue<TResult>(IQuery<TResult> query) where TResult : struct
+    protected Task<TResult> QuerySingleValue<TResult>(IQuery<TResult> query) where TResult : struct
     {
         return Task.FromResult(Context.Database.SqlQueryRaw<TResult>(query.Query).AsEnumerable().FirstOrDefault());
+    }
+    
+    protected Task<TResult> QuerySingleValue<TFilter, TResult>(IQuery<TResult, TFilter> query)
+        where TResult : struct where TFilter : IFilter
+    {
+        return Task.FromResult(Context.Database.SqlQueryRaw<TResult>(query.Query, query.Parameters()!).AsEnumerable()
+            .FirstOrDefault());
     }
 
     protected IEnumerable<TResult> Query<TFilter, TResult>(IQuery<TResult, TFilter> query)

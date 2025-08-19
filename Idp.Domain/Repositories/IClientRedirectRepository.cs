@@ -5,5 +5,5 @@ namespace Idp.Domain.Repositories;
 
 public interface IClientRedirectRepository : ICrudRepository<ClientRedirectEntity, Guid>
 {
-    
+    Task<bool> IsValidRedirect(Guid clientId, string requestRedirectUri);
 }

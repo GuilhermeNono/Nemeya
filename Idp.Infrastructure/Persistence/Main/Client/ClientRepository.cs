@@ -8,5 +8,5 @@ namespace Idp.Infrastructure.Persistence.Main.Client;
 
 public class ClientRepository(MainContext context) : CrudRepository<ClientEntity, Guid>(context), IClientRepository
 {
-    public Task<bool> HasAtLeastOneClient() => QueryValue(new HasAtLeastOneClientQuery());
+    public Task<bool> HasAtLeastOneClient() => QuerySingleValue(new HasAtLeastOneClientQuery());
 }

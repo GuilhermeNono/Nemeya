@@ -13,12 +13,11 @@ public record CodeAuthorizeCommand(
     string Scopes,
     string State,
     string CodeChallenge,
-    CodeChallengeMethod CodeChallengeMethod,
-    LoggedPerson LoggedPerson) : ICommand<CodeAuthorizeResponse>
+    CodeChallengeMethod CodeChallengeMethod) : ICommand<CodeAuthorizeResponse>
 {
     public static CodeAuthorizeCommand ToCommand(CodeAuthorizeRequest request, LoggedPerson loggedPerson)
     {
         return new CodeAuthorizeCommand(request.ResponseType, request.ClientId, request.RedirectUri, request.Scopes, request.State,
-            request.CodeChallenge, request.CodeChallengeMethod, loggedPerson);
+            request.CodeChallenge, request.CodeChallengeMethod);
     }
 }

@@ -35,4 +35,6 @@ public static class CryptoHelper
         var decrypted = decryptor.TransformFinalBlock(bytes, 0, bytes.Length);
         return Encoding.UTF8.GetString(decrypted);
     }
+
+    public static string GenerateAuthorizationCode() => Guid.NewGuid().ToString("N")[..16];
 }

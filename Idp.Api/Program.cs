@@ -43,8 +43,7 @@ builder.Services.ConfigureAuthentication()
 #region | Database |
 
 builder.Services.ConfigureDatabase(builder.Configuration)
-    .AddMainRepositories()
-    .AddAuditRepositories();
+    .AddMainRepositories();
 
 #endregion
 

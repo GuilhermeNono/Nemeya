@@ -95,5 +95,9 @@ public static class ErrorMessage
             "Não foi possivel completar uma transação com a assinatura informada.";
 
         public static string MigrationConnection(string? connectionString) => $"Não foi possivel estabelecer uma conexão estavel com \"{connectionString ?? "null"}\".";
+
+        public static string InvalidClient(string client) => $"O cliente \"{client}\" é inválido.";
+
+        public static string ClientNotFound() => "O cliente informádo não foi encontrado.";
     }
 }

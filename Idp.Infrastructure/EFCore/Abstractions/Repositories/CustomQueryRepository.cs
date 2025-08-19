@@ -17,10 +17,15 @@ public abstract class CustomQueryRepository<TEntity> : EfContext<TEntity> where 
             .FirstOrDefault());
     }
 
-    protected Task<TResult?> QuerySingle<TResult>(IQuery<TResult> query) where TResult : class
+    protected Task<TResult?> QuerySingle<TResult>(IQuery<TResult> query) where TResult : class 
     {
         return Task.FromResult(Context.Database.SqlQueryRaw<TResult>(query.Query).AsNoTracking().AsEnumerable()
             .FirstOrDefault());
+    }
+    
+    protected Task<TResult> QueryValue<TResult>(IQuery<TResult> query) where TResult : struct
+    {
+        return Task.FromResult(Context.Database.SqlQueryRaw<TResult>(query.Query).AsEnumerable().FirstOrDefault());
     }
 
     protected IEnumerable<TResult> Query<TFilter, TResult>(IQuery<TResult, TFilter> query)

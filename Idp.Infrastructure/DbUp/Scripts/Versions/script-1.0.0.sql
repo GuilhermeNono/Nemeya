@@ -147,7 +147,7 @@ CREATE TABLE Ppl_People
         CONSTRAINT FK_People_User FOREIGN KEY REFERENCES Ath_Users(Id),
     FirstName varchar(254) NOT NULL,
     LastName varchar(254) NOT NULL,
-    DocumentHash varchar(254) NOT NULL,
+    Document varchar(50) NOT NULL,
     PhoneNumber varchar(40) NULL,
     BirthDate date NULL,
     Operation char(7) NOT NULL,

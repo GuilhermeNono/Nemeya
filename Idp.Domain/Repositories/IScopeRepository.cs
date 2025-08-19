@@ -5,4 +5,5 @@ namespace Idp.Domain.Repositories;
 
 public interface IScopeRepository : IReadRepository<ScopeEntity, int>
 {
+    Task<IEnumerable<ScopeEntity>> Find();
 }

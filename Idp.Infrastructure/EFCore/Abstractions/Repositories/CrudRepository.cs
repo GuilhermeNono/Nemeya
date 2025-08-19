@@ -3,7 +3,6 @@ using Idp.Domain.Database.Entity.Interfaces;
 using Idp.Domain.Database.Repository;
 using Idp.Domain.Enums;
 using Idp.Domain.Enums.Smart;
-using Idp.Domain.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Idp.Infrastructure.EFCore.Abstractions.Repositories;

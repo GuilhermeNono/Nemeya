@@ -13,12 +13,11 @@ namespace Idp.Infrastructure.DbUp;
 
 public static class DbUpExtension
 {
-    private const string ServerConnectionName = "SqlServerConnection";
-    private const string AuditServerConnectionName = "SqlAuditServerConnection";
+    private const string ServerConnectionName = "MainDatabase";
     public const string MainMigrationsPath = "Versions";
     public const string FunctionMigrationsPath = "Functions";
     
-    private static readonly IReadOnlyList<string> ServerConnections = [ServerConnectionName, AuditServerConnectionName];
+    private static readonly IReadOnlyList<string> ServerConnections = [ServerConnectionName];
 
     private static IApplicationBuilder RunFunctionsDbUp(this IApplicationBuilder application,
         IConfiguration configuration)

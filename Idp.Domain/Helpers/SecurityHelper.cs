@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
 using Idp.Domain.Objects.Security;
 
 namespace Idp.Domain.Helpers;

@@ -3,7 +3,7 @@ using Idp.Domain.Database.Entity;
 
 namespace Idp.Domain.Entities;
 
-[Table("Ath_ClientsRedirects")]
+[Table("Ath_ClientRedirects")]
 public class ClientRedirectEntity : AuditableEntity<Guid>
 {
     public string Uri { get; set; } = string.Empty;

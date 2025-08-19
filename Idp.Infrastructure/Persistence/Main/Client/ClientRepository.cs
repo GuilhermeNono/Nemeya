@@ -2,8 +2,11 @@
 using Idp.Domain.Repositories;
 using Idp.Infrastructure.EFCore.Abstractions.Repositories;
 using Idp.Infrastructure.EFCore.Database.Context;
-using Microsoft.EntityFrameworkCore;
+using Idp.Infrastructure.Persistence.Main.Client.Queries.HasNoClients;
 
 namespace Idp.Infrastructure.Persistence.Main.Client;
 
-public class ClientRepository(MainContext context) : CrudRepository<ClientEntity, Guid>(context), IClientRepository;
+public class ClientRepository(MainContext context) : CrudRepository<ClientEntity, Guid>(context), IClientRepository
+{
+    public Task<bool> HasAtLeastOneClient() => QueryValue(new HasAtLeastOneClientQuery());
+}

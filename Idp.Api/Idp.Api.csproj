@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="AWSSDK.KeyManagementService" Version="4.0.0.5" />
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
         <PackageReference Include="FluentValidation" Version="11.11.0" />
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
         <PackageReference Include="Hangfire.Core" Version="1.8.18" />
@@ -21,6 +22,7 @@
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.2" />
+        <PackageReference Include="Ulid" Version="1.4.1" />
     </ItemGroup>
 
     <ItemGroup>

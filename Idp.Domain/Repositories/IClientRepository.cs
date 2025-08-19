@@ -5,5 +5,5 @@ namespace Idp.Domain.Repositories;
 
 public interface IClientRepository : ICrudRepository<ClientEntity, Guid>
 {
-    
+    Task<bool> HasAtLeastOneClient();
 }

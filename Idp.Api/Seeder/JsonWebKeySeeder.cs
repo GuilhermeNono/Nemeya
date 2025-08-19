@@ -1,6 +1,5 @@
 ﻿using Idp.Domain.Entities;
 using Idp.Domain.Enums.Smart;
-using Idp.Domain.Helpers;
 using Idp.Domain.Repositories;
 using Idp.Domain.Services.Aws;
 

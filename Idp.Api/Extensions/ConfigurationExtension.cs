@@ -25,5 +25,7 @@ public static class ConfigurationExtension
     {
         services.AddConfiguration<JwtConfiguration, IJwtConfiguration>(configuration);
         services.AddConfiguration<AwsConfiguration, IAwsConfiguration>(configuration);
+        services.AddConfiguration<CryptographyConfiguration, ICryptographyConfiguration>(configuration);
+        services.AddConfiguration<AppConfiguration, IAppConfiguration>(configuration);
     }
 }

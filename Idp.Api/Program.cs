@@ -79,7 +79,6 @@ if(builder.Environment.IsDevelopment())
 #endregion
 
 builder.Services.AddHostedService<JsonWebKeySeeder>();
-builder.Services.AddHostedService<AdminClientSeeder>();
 
 var app = builder.Build();
 

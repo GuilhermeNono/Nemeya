@@ -55,6 +55,7 @@ public static class DbUpExtension
             })
         .WithFilter(new ExecutionOrderScriptFilter())
         .WithTransactionPerScript()
+        .WithVariablesDisabled()
         .Build();
     
     public static MigrationStatusEnum RunMigration(string? connectionString, params string[] folder)

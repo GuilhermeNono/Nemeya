@@ -4,15 +4,15 @@ using System.Runtime.CompilerServices;
 namespace Idp.Domain.Enums.Smart.Base;
 
 [ExcludeFromCodeCoverage]
-public abstract class SmartEnum<TEnum> : IEquatable<SmartEnum<TEnum>> where TEnum : SmartEnum<TEnum>
+public abstract class SmartEnum<TType> : IEquatable<SmartEnum<TType>> where TType : SmartEnum<TType>
 {
-    protected string Value { get; }
-    public int Index { get; }
+    private string Value { get; }
+    private int Index { get; }
 
     // ReSharper disable once StaticMemberInGenericType
     private static bool _initialized;
 
-    private static readonly Dictionary<int, TEnum> Values = new();
+    private static readonly Dictionary<int, TType> Values = new();
 
     protected SmartEnum(string value, int index)
     {
@@ -20,19 +20,19 @@ public abstract class SmartEnum<TEnum> : IEquatable<SmartEnum<TEnum>> where TEnu
         Value = value;
     }
 
-    public static TEnum? GetByValue(string value)
+    public static TType? GetByValue(string value)
     {
         EnsureInitialized();
         return Values.Values.FirstOrDefault(x => x.Value == value);
     }
 
-    public static TEnum? GetByIndex(int index)
+    public static TType? GetByIndex(int index)
     {
         EnsureInitialized();
         return Values.GetValueOrDefault(index);
     }
 
-    public static IReadOnlyDictionary<int, TEnum> Get()
+    public static IReadOnlyDictionary<int, TType> Get()
     {
         EnsureInitialized();
         return Values.AsReadOnly();
@@ -42,18 +42,18 @@ public abstract class SmartEnum<TEnum> : IEquatable<SmartEnum<TEnum>> where TEnu
     {
         if (_initialized) return;
 
-        RuntimeHelpers.RunClassConstructor(typeof(TEnum).TypeHandle);
+        RuntimeHelpers.RunClassConstructor(typeof(TType).TypeHandle);
         _initialized = true;
     }
 
     #region | Implicit Operators |
 
-    public static implicit operator string(SmartEnum<TEnum> value)
+    public static implicit operator string(SmartEnum<TType> value)
     {
         return value.Value;
     }
 
-    public static implicit operator int(SmartEnum<TEnum> value)
+    public static implicit operator int(SmartEnum<TType> value)
     {
         return value.Index;
     }
@@ -66,7 +66,7 @@ public abstract class SmartEnum<TEnum> : IEquatable<SmartEnum<TEnum>> where TEnu
 
     public override string ToString() => Value;
 
-    public bool Equals(SmartEnum<TEnum>? other)
+    public bool Equals(SmartEnum<TType>? other)
     {
         if (other is null) return false;
 
@@ -77,18 +77,17 @@ public abstract class SmartEnum<TEnum> : IEquatable<SmartEnum<TEnum>> where TEnu
     {
         if (obj is null) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        return Equals((SmartEnum<TEnum>)obj);
+        return obj.GetType() == GetType() && Equals((SmartEnum<TType>)obj);
     }
 
-    public static bool operator ==(SmartEnum<TEnum>? a, SmartEnum<TEnum>? b)
+    public static bool operator ==(SmartEnum<TType>? a, SmartEnum<TType>? b)
     {
         if (ReferenceEquals(a, b)) return true;
         if (a is null || b is null) return false;
         return a.Equals(b);
     }
 
-    public static bool operator !=(SmartEnum<TEnum>? a, SmartEnum<TEnum>? b)
+    public static bool operator !=(SmartEnum<TType>? a, SmartEnum<TType>? b)
     {
         return !(a == b);
     }

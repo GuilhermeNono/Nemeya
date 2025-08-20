@@ -70,7 +70,7 @@ public static class DbUpExtension
         var result = upgrader.PerformUpgrade();
         
         if (!result.Successful)
-            throw new DatabaseMigrationFailed();
+            throw new DatabaseMigrationFailed(result.Error.Message);
         
         return result.Successful ? MigrationStatusEnum.Successful : MigrationStatusEnum.Failed;
     }

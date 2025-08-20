@@ -5,7 +5,7 @@ namespace Idp.CrossCutting.Exceptions.Http.Internal;
 
 public class DatabaseMigrationFailed : InternalException
 {
-    public DatabaseMigrationFailed() : base(ErrorMessage.Exception.MigrationFailed())
+    public DatabaseMigrationFailed(string error) : base(ErrorMessage.Exception.MigrationFailed(error))
     {
     }
 }

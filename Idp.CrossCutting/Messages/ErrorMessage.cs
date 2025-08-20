@@ -21,7 +21,7 @@ public static class ErrorMessage
         public static string EntityDeleteNotFoundException(string entity) =>
             $"Não foi possível deletar, pois não há registro em {entity} com este Id.";
         
-        public static string MigrationFailed() => "Houve uma falha ao executar a migração do banco de dados.";
+        public static string MigrationFailed(string error) => $"Houve uma falha ao executar a migração do banco de dados.\nErro: {error}";
 
         public static string UserNotFound(Guid id) => $"Não foi possível encontrar um usuário com o Id {id}";
 

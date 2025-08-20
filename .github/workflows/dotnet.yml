@@ -28,5 +28,6 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
       
-    - name: Integration Tests
-      run: dotnet test .\Idp.Test.Integration\Idp.Test.Integration.csproj --no-build
+    - name: Integration tests
+      run: dotnet test ./Idp.Test.Integration/Idp.Test.Integration.csproj --no-build --logger trx
+

@@ -23,10 +23,10 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Restore dependencies
-      run: dotnet restore ./IdentityProvider.sln
+      run: dotnet restore
       
     - name: Build
-      run: dotnet build ./IdentityProvider.sln --no-restore
+      run: dotnet build --no-restore
       
-    - name: Test
-      run: dotnet test ./IdentityProvider.sln --no-build
+    - name: Integration Tests
+      run: dotnet test .\Idp.Test.Integration\Idp.Test.Integration.csproj --no-build

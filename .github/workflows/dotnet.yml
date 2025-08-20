@@ -21,6 +21,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
+    - name: Setup Docker
+      uses: docker/setup-buildx-action@v3
         
     - name: Restore dependencies
       run: dotnet restore
@@ -29,5 +32,6 @@ jobs:
       run: dotnet build --no-restore
       
     - name: Integration tests
-      run: dotnet test ./Idp.Test.Integration/Idp.Test.Integration.csproj --no-build --logger trx
+      run: dotnet test ./IdentityProvider.sln --no-build
+    
 

@@ -18,25 +18,34 @@ public class CodeAuthorizeCommandHandler(
 {
     public async Task<CodeAuthorizeResponse> Handle(CodeAuthorizeCommand request, CancellationToken cancellationToken)
     {
-        if (!Guid.TryParse(request.ClientId, out var clientId))
+        if (!Ulid.TryParse(request.ClientId, out var clientId))
             throw new InvalidClientException(request.ClientId);
+        
+        var client = await clientRepository.FindByClientId(clientId.ToString()) 
+                     ?? throw new ClientNotFoundException();
 
-        if (!await clientRepository.Exists(clientId))
-            throw new ClientNotFoundException();
-
-        if (!await clientRedirectRepository.IsValidRedirect(clientId, request.RedirectUri))
+        if (!await clientRedirectRepository.IsValidRedirect(client.Id, request.RedirectUri))
             throw new Exception();
 
         var requestedScopes = request.Scopes.Split(' ');
 
-        var scopes = (await scopeRepository.FindByNames(requestedScopes)).ToArray();
+        var scopes = new List<ScopeEntity>();
+        
+        foreach (var scope in requestedScopes)
+        {
+            var value = await scopeRepository.FindByNames(scope);
+            if (value == null)
+                continue;
+            scopes.Add(value);
+        }
 
-        if (scopes.Length != requestedScopes.Length)
+        if (scopes.Count != requestedScopes.Length)
             throw new Exception(); // Escopo inexistente
 
         await authorizationCodeRepository.Add(new AuthorizationCodeEntity
         {
-            ClientId = clientId,
+            ClientId = client.Id,
+            UserId = null,
             Code = CryptoHelper.GenerateAuthorizationCode(),
             ExpiresAt = DateTimeOffset.Now.AddMinutes(1),
             IsUsed = false,
@@ -46,6 +55,14 @@ public class CodeAuthorizeCommandHandler(
         }, DefaultUserOperation.System, cancellationToken);
 
         //Modificar para a Url Correta
-        return new CodeAuthorizeResponse($"{request.RedirectUri}");
+        return new CodeAuthorizeResponse(request.RedirectUri, new ParamsWrapper(new Dictionary<string, string>
+        {
+            { "scopes", string.Join('-', request.Scopes.Split(' ')) },
+            { "clientid", request.ClientId},
+            { "response_type", request.ResponseType.ToString() },
+            {"state", request.State },
+            {"code_challenge", request.CodeChallenge},
+            {"code_challenge_method", request.CodeChallengeMethod.ToString() },
+        }));
     }
 }

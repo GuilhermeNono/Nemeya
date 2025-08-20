@@ -10,5 +10,5 @@ namespace Idp.Infrastructure.Persistence.Main.Scope;
 public class ScopeRepository(MainContext context) : ReadRepository<ScopeEntity, int>(context), IScopeRepository
 {
     public Task<IEnumerable<ScopeEntity>> Find() => Task.FromResult(Query(new FindScopesQuery()));
-    public Task<IEnumerable<ScopeEntity>> FindByNames(string[] names) => Task.FromResult(Query(new FindScopesByNameQuery(new FindScopesByNameFilter(names))));
+    public Task<ScopeEntity?> FindByNames(string names) => QuerySingle(new FindScopesByNameQuery(new FindScopesByNameFilter(names)));
 }

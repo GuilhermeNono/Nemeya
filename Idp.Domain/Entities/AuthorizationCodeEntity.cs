@@ -6,7 +6,7 @@ namespace Idp.Domain.Entities;
 [Table("Ath_AuthorizationCodes")]
 public class AuthorizationCodeEntity : AuditableEntity<Guid>
 {
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
     public Guid ClientId { get; set; }
     public string Code { get; set; } = string.Empty;
     public string CodeChallenge { get; set; } = string.Empty;

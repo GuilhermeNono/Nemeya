@@ -6,4 +6,6 @@ namespace Idp.Domain.Repositories;
 public interface IClientRepository : ICrudRepository<ClientEntity, Guid>
 {
     Task<bool> HasAtLeastOneClient();
+    Task<bool> ExistsByClientId(string clientId);
+    Task<ClientEntity?> FindByClientId(string clientId);
 }

@@ -15,7 +15,7 @@ public record CodeAuthorizeCommand(
     string CodeChallenge,
     CodeChallengeMethod CodeChallengeMethod) : ICommand<CodeAuthorizeResponse>
 {
-    public static CodeAuthorizeCommand ToCommand(CodeAuthorizeRequest request, LoggedPerson loggedPerson)
+    public static CodeAuthorizeCommand ToCommand(CodeAuthorizeRequest request)
     {
         return new CodeAuthorizeCommand(request.ResponseType, request.ClientId, request.RedirectUri, request.Scopes, request.State,
             request.CodeChallenge, request.CodeChallengeMethod);

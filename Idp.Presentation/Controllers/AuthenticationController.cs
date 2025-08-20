@@ -28,6 +28,6 @@ public class AuthenticationController : ApiController
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> AuthorizeWithCodeChallengeAsync([FromForm]CodeAuthorizeRequest request)
     {
-        return Ok(await Sender.Send(CodeAuthorizeCommand.ToCommand(request, LoggedPerson)));
+        return Ok(await Sender.Send(CodeAuthorizeCommand.ToCommand(request)));
     }
 }

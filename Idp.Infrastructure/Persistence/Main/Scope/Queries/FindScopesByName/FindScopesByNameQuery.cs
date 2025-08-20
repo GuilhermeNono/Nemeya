@@ -10,7 +10,7 @@ public class FindScopesByNameQuery(FindScopesByNameFilter filter) : CustomQuery<
         Add($"""
             SELECT *
               FROM Ath_Scopes
-             WHERE Name in ({Param(x => x.FormatedNames)})
+             WHERE Name = {Param(x => x.Name)}
             """);
     }
 }

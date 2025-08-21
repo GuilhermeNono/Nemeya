@@ -1,0 +1,85 @@
+﻿openapi: 3.0.4
+info:
+  title: Idp.Api
+  version: '1.0'
+paths:
+  /v1/auth/authorize:
+    post:
+      tags:
+        - Authentication
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ResponseType:
+                  $ref: '#/components/schemas/ResponseType'
+                ClientId:
+                  type: string
+                RedirectUri:
+                  type: string
+                Scopes:
+                  type: string
+                State:
+                  type: string
+                CodeChallenge:
+                  type: string
+                CodeChallengeMethod:
+                  $ref: '#/components/schemas/CodeChallengeMethod'
+            encoding:
+              ResponseType:
+                style: form
+              ClientId:
+                style: form
+              RedirectUri:
+                style: form
+              Scopes:
+                style: form
+              State:
+                style: form
+              CodeChallenge:
+                style: form
+              CodeChallengeMethod:
+                style: form
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    CodeChallengeMethod:
+      enum:
+        - Sha256
+      type: string
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: {}
+    ResponseType:
+      enum:
+        - Code
+      type: string

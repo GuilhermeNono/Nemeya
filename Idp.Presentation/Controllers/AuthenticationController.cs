@@ -22,12 +22,11 @@ public class AuthenticationController : ApiController
     [AllowAnonymous]
     [HttpPost("authorize")]
     [Consumes("application/x-www-form-urlencoded")]
-    [Produces("application/json")]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.Redirect)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> AuthorizeWithCodeChallengeAsync([FromForm]CodeAuthorizeRequest request)
     {
-        return Ok(await Sender.Send(CodeAuthorizeCommand.ToCommand(request)));
+        return Redirect((await Sender.Send(CodeAuthorizeCommand.ToCommand(request))).Link);
     }
 }

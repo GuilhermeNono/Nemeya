@@ -4,6 +4,7 @@ namespace Idp.Api.Configurations;
 
 public class AppConfiguration : IAppConfiguration
 {
+    public string Root { get; set; } = string.Empty;
     public string ClientName { get; set; } = string.Empty;
     public string ClientSecret { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;

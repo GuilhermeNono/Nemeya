@@ -2,6 +2,7 @@ namespace Idp.CrossCutting.Configurations;
 
 public interface IAppConfiguration
 {
+    public string Root { get; set; }
     public string ClientName { get; set; }
     public string ClientSecret { get; set; }
     public string UserName { get; set; }

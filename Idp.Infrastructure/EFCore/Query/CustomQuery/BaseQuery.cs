@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Linq.Expressions;
 using Idp.Domain.Annotations;
+using Idp.Domain.Database.Queries.Base;
 using Idp.Domain.Enums;
 using Idp.Infrastructure.EFCore.Query.CustomQuery.Interfaces;
 using Microsoft.Data.SqlClient;
 
 namespace Idp.Infrastructure.EFCore.Query.CustomQuery;
 
-public abstract class BaseQuery<TResult> : QueryConfigurer<TResult>, IQuery<TResult>
+public abstract class BaseQuery<TResult>() : QueryConfigurer<TResult>(null), IQuery<TResult> 
 
 {
     public bool IsCountable => Pagination.IsPageable;
@@ -66,9 +67,9 @@ public abstract class BaseQuery<TResult> : QueryConfigurer<TResult>, IQuery<TRes
 }
 
 public abstract class BaseQuery<TResult, TFilter>(TFilter filter)
-    : QueryConfigurer<TResult>, IQuery<TResult, TFilter>
+    : QueryConfigurer<TResult>(filter), IQuery<TResult, TFilter> where TFilter : IFilter
 {
-    protected TFilter Filter { get; } = filter;
+    protected new TFilter Filter { get; } = filter;
     public bool IsCountable => Pagination.IsPageable;
 
     /// <summary>
@@ -171,9 +172,11 @@ public abstract class BaseQuery<TResult, TFilter>(TFilter filter)
             }
             else if (!(value is string) && value is IEnumerable enumerable)
             {
-                foreach (var item in enumerable)
+                var values = enumerable.Cast<object?>().ToArray();
+                
+                for (int i = 0; i < values.Length; i++)
                 {
-                    parameters.Add(new SqlParameter(property.Name, item ?? DBNull.Value));
+                    parameters.Add(new SqlParameter(property.Name + i, values[i] ??  DBNull.Value));
                 }
             }
             else

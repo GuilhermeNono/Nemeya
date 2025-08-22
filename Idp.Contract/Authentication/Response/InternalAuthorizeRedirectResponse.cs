@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Idp.Contract.Authentication.Response;
 
-public record CodeAuthorizeResponse(
+public record InternalAuthorizeRedirectResponse(
     [property: JsonIgnore] string Root,
     [property: JsonIgnore] ParamsWrapper ParamWrapper)
 {

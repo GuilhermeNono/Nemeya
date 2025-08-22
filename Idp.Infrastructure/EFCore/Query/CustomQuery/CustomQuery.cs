@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Idp.Domain.Database.Queries.Base;
 using Idp.Infrastructure.EFCore.Query.CustomQuery.Interfaces;
 
 namespace Idp.Infrastructure.EFCore.Query.CustomQuery;
@@ -19,7 +20,7 @@ public abstract class CustomQuery<TResult> : BaseQuery<TResult>, ICustomQuery<TR
 /// <typeparam name="TFilter">Classe para adicionar parâmetros condicionais à consulta</typeparam>
 /// </summary>
 public abstract class CustomQuery<TFilter, TResult>(TFilter filter)
-    : BaseQuery<TResult, TFilter>(filter), ICustomQuery<TFilter, TResult>
+    : BaseQuery<TResult, TFilter>(filter), ICustomQuery<TFilter, TResult> where TFilter : IFilter
 
 {
     

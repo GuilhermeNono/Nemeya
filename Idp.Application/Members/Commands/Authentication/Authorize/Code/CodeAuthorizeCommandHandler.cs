@@ -1,5 +1,6 @@
 ﻿using Idp.Application.Members.Abstractions.Commands;
 using Idp.Contract.Authentication.Response;
+using Idp.CrossCutting.Configurations;
 using Idp.CrossCutting.Exceptions.Http.BadRequest;
 using Idp.CrossCutting.Exceptions.Http.UnprocessableEntity.Client;
 using Idp.Domain.Entities;
@@ -13,15 +14,16 @@ public class CodeAuthorizeCommandHandler(
     IClientRepository clientRepository,
     IClientRedirectRepository clientRedirectRepository,
     IScopeRepository scopeRepository,
-    IAuthorizationCodeRepository authorizationCodeRepository)
-    : ICommandHandler<CodeAuthorizeCommand, CodeAuthorizeResponse>
+    IAuthorizationCodeRepository authorizationCodeRepository,
+    IAppConfiguration appConfiguration)
+    : ICommandHandler<CodeAuthorizeCommand, InternalAuthorizeRedirectResponse>
 {
-    public async Task<CodeAuthorizeResponse> Handle(CodeAuthorizeCommand request, CancellationToken cancellationToken)
+    public async Task<InternalAuthorizeRedirectResponse> Handle(CodeAuthorizeCommand request, CancellationToken cancellationToken)
     {
         if (!Ulid.TryParse(request.ClientId, out var clientId))
             throw new InvalidClientException(request.ClientId);
-        
-        var client = await clientRepository.FindByClientId(clientId.ToString()) 
+
+        var client = await clientRepository.FindByClientId(clientId.ToString())
                      ?? throw new ClientNotFoundException();
 
         if (!await clientRedirectRepository.IsValidRedirect(client.Id, request.RedirectUri))
@@ -29,18 +31,10 @@ public class CodeAuthorizeCommandHandler(
 
         var requestedScopes = request.Scopes.Split(' ');
 
-        var scopes = new List<ScopeEntity>();
+        var scopes = (await scopeRepository.FindByNames(requestedScopes)).ToArray();
         
-        foreach (var scope in requestedScopes)
-        {
-            var value = await scopeRepository.FindByNames(scope);
-            if (value == null)
-                continue;
-            scopes.Add(value);
-        }
-
-        if (scopes.Count != requestedScopes.Length)
-            throw new Exception(); // Escopo inexistente
+        if (scopes.Length != requestedScopes.Length)
+            throw new Exception(); 
 
         await authorizationCodeRepository.Add(new AuthorizationCodeEntity
         {
@@ -54,15 +48,14 @@ public class CodeAuthorizeCommandHandler(
             UsedAt = null
         }, DefaultUserOperation.System, cancellationToken);
 
-        //Modificar para a Url Correta
-        return new CodeAuthorizeResponse(request.RedirectUri, new ParamsWrapper(new Dictionary<string, string>
+        return new InternalAuthorizeRedirectResponse(appConfiguration.Root, new ParamsWrapper(new Dictionary<string, string>
         {
             { "scopes", string.Join('-', request.Scopes.Split(' ')) },
-            { "clientid", request.ClientId},
+            { "clientid", request.ClientId },
             { "response_type", request.ResponseType.ToString() },
-            {"state", request.State },
-            {"code_challenge", request.CodeChallenge},
-            {"code_challenge_method", request.CodeChallengeMethod.ToString() },
+            { "state", request.State },
+            { "code_challenge", request.CodeChallenge },
+            { "code_challenge_method", request.CodeChallengeMethod.ToString() },
         }));
     }
 }

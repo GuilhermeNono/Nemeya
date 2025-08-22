@@ -4,9 +4,11 @@ using Idp.Infrastructure.EFCore.Query.CustomQuery.Structs;
 
 namespace Idp.Infrastructure.EFCore.Query.CustomQuery;
 
-public abstract class QueryConfigurer<TResult> : QueryPropertyConfigurer<TResult>, IQueryConfigurer<TResult>
+public abstract class QueryConfigurer<TResult>(IFilter? filter)
+    : QueryPropertyConfigurer<TResult>, IQueryConfigurer<TResult>
 {
     protected IPagination<TResult> Pagination { get; } = new Pagination<TResult>(null, null);
+    protected IFilter? Filter { get; init; } = filter;
 
     /// <summary>
     /// Este método deve ser utilizado para construir a consulta SQL.
@@ -25,9 +27,10 @@ public abstract class QueryConfigurer<TResult> : QueryPropertyConfigurer<TResult
         Prepare();
         SqlQueryValidator
             .WithQuery(QueryBuilder)
-            .Validate();
+            .Validate()
+            .BuildVirtualVariables(Filter);
     }
-
+    
     /// <summary>
     /// Essa propriedade deve ser utilizada para contagem dos registros de uma consulta.
     /// <returns>Será retornada a consulta SQL com a função agregada <c>"Count(1)"</c></returns>

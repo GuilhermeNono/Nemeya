@@ -6,5 +6,6 @@ namespace Idp.Domain.Repositories;
 public interface IScopeRepository : IReadRepository<ScopeEntity, int>
 {
     Task<IEnumerable<ScopeEntity>> Find();
-    Task<ScopeEntity?> FindByNames(string names);
+    Task<ScopeEntity?> FindByName(string names);
+    Task<IEnumerable<ScopeEntity>> FindByNames(string[] scopes);
 }

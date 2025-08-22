@@ -13,7 +13,7 @@ public record CodeAuthorizeCommand(
     string Scopes,
     string State,
     string CodeChallenge,
-    CodeChallengeMethod CodeChallengeMethod) : ICommand<CodeAuthorizeResponse>
+    CodeChallengeMethod CodeChallengeMethod) : ICommand<InternalAuthorizeRedirectResponse>
 {
     public static CodeAuthorizeCommand ToCommand(CodeAuthorizeRequest request)
     {
